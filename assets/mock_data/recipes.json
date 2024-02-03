@@ -1,0 +1,19 @@
+{
+  "recipes":[
+    {
+    "image": "tomatoes_and_burrata.jpg",
+    "name": "Tomatoes & Burrata",
+    "score": 4.8
+    },
+    {
+      "image": "omelet.jpg",
+      "name": "Omelet",
+      "score": 4.6
+    },
+    {
+      "image": "hummus_veggie_wrap.jpg",
+      "name": "Hummus Veggie Wrap",
+      "score": 4.4
+    }
+  ]
+}
