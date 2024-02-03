@@ -54,19 +54,18 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           var recipe = _recipeData[itemIndex];
           return Column(
             children: [
-              Expanded(
-                child: Container(
-                  child: Image.asset(
-                    'assets/images/${recipe['image']}',
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              SizedBox(
+                height: 500.0,
+                child: Image.asset(
+                      'assets/images/${recipe['image']}',
+                      fit: BoxFit.contain,
+                    ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
                   recipe['name'],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
