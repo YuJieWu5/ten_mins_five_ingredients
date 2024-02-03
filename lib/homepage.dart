@@ -15,14 +15,49 @@ class HomePage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            // Use the CarouselWithIndicator widget
-            child: CarouselWithIndicator(),
-          ),
-          BottomActionBar(),
-        ],
+      body: SingleChildScrollView(
+        child:  SizedBox(
+          height: 1000.0,
+          child: CarouselWithIndicator(),
+        ),
+      ),
+      // Column(
+      //     children: <Widget>[
+      //       Expanded(
+      //         // Use the CarouselWithIndicator widget
+      //         child: CarouselWithIndicator(),
+      //       ),
+      //     ],
+      //   ),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: OverflowBar(
+            overflowAlignment:  OverflowBarAlignment.center,
+            alignment: MainAxisAlignment.center,
+            overflowSpacing: 5.0,
+            children: [
+              ElevatedButton(
+                child: Text('Get Recipe'),
+                onPressed: () {
+                  // Placeholder to implement get function
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.account_circle),
+                onPressed: () {
+                  // Placeholder to navigate to profile
+                },
+              ),
+              ElevatedButton(
+                child: Text('Create Recipe'),
+                onPressed: () {
+                  // Placeholder to implement create function
+                },
+              )
+            ],
+          )
+        ),
       ),
     );
   }
