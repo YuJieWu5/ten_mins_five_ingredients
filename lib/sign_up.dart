@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _userNameController =  TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  void _onCreatePressed(){
+    if(_formKey.currentState?.validate() ?? false) {
+      //TODO: save account info to database
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Center(
+          child: Text('Sign Up', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                  child: Center(
+                    child: SizedBox(
+                      width: 400.0,
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                            labelText: 'Username'
+                        ),
+                        controller: _userNameController,
+                        validator: (newValue) {
+                          if(newValue == null || newValue.isEmpty) {
+                            return 'Username must not be blank.';
+                          }
+                          return null;
+                        },
+                      )
+                    )
+                  )
+                ),
+                SizedBox(
+                  width: 400.0,
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                        labelText: 'Password'
+                    ),
+                    controller: _passwordController,
+                    validator: (newValue) {
+                      if(newValue == null || newValue.isEmpty) {
+                        return 'Password must not be blank.';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 400.0,
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                        labelText: 'Confirm Password'
+                    ),
+                    controller: _confirmPasswordController,
+                    validator: (newValue) {
+                      if(newValue == null || newValue.isEmpty) {
+                        return 'Confirm Password must not be blank.';
+                      }else if(_passwordController != newValue){
+                        return 'Passwords must be same.';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top:20.0),
+                  child: ElevatedButton(
+                    // Note: we are not calling _onSavePressed! We are passing it
+                    // like an object to this other widget as a constructor arg.
+                      onPressed: _onCreatePressed,
+                      child: const Text('Create')
+                  )
+                )
+              ],
+            ),
+          )
+        )
+      )
+    );
+  }
+}
