@@ -3,8 +3,10 @@ import 'ingredients.dart';
 import 'recipe_list_page.dart';
 
 class IngredientListPage extends StatefulWidget {
+  const IngredientListPage({super.key});
+
   @override
-  _IngredientListPageState createState() => _IngredientListPageState();
+  State<IngredientListPage> createState() => _IngredientListPageState();
 }
 
 class _IngredientListPageState extends State<IngredientListPage> {
