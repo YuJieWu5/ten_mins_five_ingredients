@@ -15,15 +15,15 @@ class HomePage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            // Use the CarouselWithIndicator widget
-            child: CarouselWithIndicator(),
-          ),
+      body: SingleChildScrollView(
+        child: Flex(
+          direction: Axis.vertical,
+          children: <Widget>[
+           CarouselWithIndicator(),
           BottomActionBar(),
         ],
       ),
+      )
     );
   }
 }
