@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -14,7 +15,10 @@ class _LogInPageState extends State<LogInPage> {
 
   void _onLoginPressed(){
     if(_formKey.currentState?.validate() ?? false) {
-      //TODO: save account info to database
+      //TODO: verify account info
+      if(_userNameController.text == "vv" && _passwordController.text == "123"){
+        context.go('/home');
+      }
     }
   }
 
@@ -24,7 +28,7 @@ class _LogInPageState extends State<LogInPage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Center(
-              child: Text('Sign Up', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+              child: Text('Log In', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
           ),
         ),
         body: SingleChildScrollView(
@@ -74,7 +78,7 @@ class _LogInPageState extends State<LogInPage> {
                             // Note: we are not calling _onSavePressed! We are passing it
                             // like an object to this other widget as a constructor arg.
                               onPressed: _onLoginPressed,
-                              child: const Text('Create')
+                              child: const Text('Log In')
                           )
                       )
                     ],
