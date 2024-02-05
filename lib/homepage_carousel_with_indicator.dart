@@ -37,10 +37,10 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
     List<Widget> hearts = [];
     int fullHearts = score.round();
     for (int i = 0; i < fullHearts; i++) {
-      hearts.add(Icon(Icons.favorite, color: Colors.red));
+      hearts.add(const Icon(Icons.favorite, color: Colors.red));
     }
     for (int i = fullHearts; i < 5; i++) {
-      hearts.add(Icon(Icons.favorite_border, color: Colors.red));
+      hearts.add(const Icon(Icons.favorite_border, color: Colors.red));
     }
     return hearts;
   }
@@ -66,7 +66,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
                   recipe['name'],
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -105,11 +105,11 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             child: Container(
               width: 8.0,
               height: 8.0,
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: _current == entry.key
-                    ? Color(0xFFF4C2C2) // Active dot
+                    ? const Color(0xFFF4C2C2) // Active dot
                     : Colors.grey, // Inactive dot
               ),
             ),
