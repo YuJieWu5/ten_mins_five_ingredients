@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,7 +43,10 @@ class _RecipeListState extends State<RecipeList> {
           ),
           title: Text(item['name']),
           subtitle: Text(item['score'].toString()),
-          trailing: Icon(Icons.chevron_right),
+          trailing: IconButton(
+            icon: const Icon(Icons.chevron_right),
+            onPressed: ()=> context.go('/recipeDetail'),
+          ),
           isThreeLine: true,
         )).toList()
       ),

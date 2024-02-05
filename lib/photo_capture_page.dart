@@ -6,7 +6,7 @@ class PhotoCapturePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Take a Photo'),
+        title: const Text('Take a Photo'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -17,7 +17,7 @@ class PhotoCapturePage extends StatelessWidget {
             AspectRatio(
               aspectRatio: 3 / 4, // Square box
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue, width: 2),
                 ),

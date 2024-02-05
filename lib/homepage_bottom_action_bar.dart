@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'photo_capture_page.dart';
 import 'recipe_list_page.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomActionBar extends StatelessWidget {
   @override
@@ -10,14 +11,9 @@ class BottomActionBar extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: ElevatedButton(
-            child: Text('Get Recipe'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PhotoCapturePage()),
-              );
-            },
-          ),
+          child: Text('📷 Get Recipe'),
+          onPressed: () => context.go('/getRecipe')
+        )
         ),
         Flexible(
           child: ElevatedButton(
