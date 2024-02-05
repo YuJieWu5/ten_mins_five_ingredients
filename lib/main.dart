@@ -4,6 +4,8 @@ import './log_in.dart';
 import './sign_up.dart';
 import './homepage.dart';
 import './recipe_list_page.dart';
+import './photo_capture_page.dart';
+import './recipe_detail.dart';
 
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
@@ -35,6 +37,18 @@ final GoRouter _router = GoRouter(
           path: 'recipeList',
           builder: (BuildContext context, GoRouterState state) {
             return const RecipeList();
+          },
+        ),
+        GoRoute(
+          path: 'recipeDetail',
+          builder: (BuildContext context, GoRouterState state) {
+            return const RecipeDetail();
+          },
+        ),
+        GoRoute(
+          path: 'getRecipe',
+          builder: (BuildContext context, GoRouterState state) {
+            return PhotoCapturePage();
           },
         ),
       ],
