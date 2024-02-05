@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ingredients_list.dart';
 
 class PhotoCapturePage extends StatelessWidget {
   @override
@@ -55,7 +56,10 @@ class ActionBar extends StatelessWidget {
             child: ElevatedButton(
               child: Text('Confirm'),
               onPressed: () {
-                // TODO: Implement show recipes functionality
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => IngredientListPage()),
+                );
               },
             ),
           ),
