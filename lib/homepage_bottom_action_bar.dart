@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'photo_capture_page.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomActionBar extends StatelessWidget {
   @override
@@ -9,12 +10,7 @@ class BottomActionBar extends StatelessWidget {
       children: <Widget>[
         ElevatedButton(
           child: Text('📷 Get Recipe'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PhotoCapturePage()),
-            );
-          },
+          onPressed: () => context.go('/getRecipe')
         ),
         IconButton(
           icon: Icon(Icons.account_circle),
