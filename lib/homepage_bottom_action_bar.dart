@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'photo_capture_page.dart';
 
 class BottomActionBar extends StatelessWidget {
   @override
@@ -9,7 +10,10 @@ class BottomActionBar extends StatelessWidget {
         ElevatedButton(
           child: Text('Get Recipe'),
           onPressed: () {
-            // Placeholder to implement get function
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PhotoCapturePage()),
+            );
           },
         ),
         IconButton(
