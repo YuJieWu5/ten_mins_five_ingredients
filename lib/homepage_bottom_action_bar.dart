@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'photo_capture_page.dart';
+import 'recipe_list_page.dart';
 
 class BottomActionBar extends StatelessWidget {
   @override
@@ -7,26 +8,43 @@ class BottomActionBar extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        ElevatedButton(
-          child: Text('📷 Get Recipe'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PhotoCapturePage()),
-            );
-          },
+        Flexible(
+          child: ElevatedButton(
+            child: Text('Get Recipe'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PhotoCapturePage()),
+              );
+            },
+          ),
         ),
-        IconButton(
-          icon: Icon(Icons.account_circle),
-          onPressed: () {
-            // TODO: Placeholder to navigate to profile
-          },
+        Flexible(
+          child: ElevatedButton(
+            child: Text('View Recipe'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RecipeList()),
+              );
+            },
+          ),
         ),
-        ElevatedButton(
-          child: Text('Create Recipe'),
-          onPressed: () {
-            // TODO: Placeholder to implement create function
-          },
+        Flexible(
+          child: ElevatedButton(
+            child: Text('Create Recipe'),
+            onPressed: () {
+              // TODO: Placeholder to implement create function
+            },
+          ),
+        ),
+        Flexible(
+          child: IconButton(
+            icon: Icon(Icons.account_circle),
+            onPressed: () {
+              // TODO: Placeholder to navigate to profile
+            },
+          ),
         ),
       ],
     );
