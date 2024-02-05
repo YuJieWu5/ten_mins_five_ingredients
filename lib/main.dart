@@ -6,6 +6,7 @@ import './homepage.dart';
 import './recipe_list_page.dart';
 import './photo_capture_page.dart';
 import './recipe_detail.dart';
+import './upload_recipe_page.dart';
 
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
@@ -49,6 +50,12 @@ final GoRouter _router = GoRouter(
           path: 'getRecipe',
           builder: (BuildContext context, GoRouterState state) {
             return PhotoCapturePage();
+          },
+        ),
+        GoRoute(
+          path: 'uploadRecipe',
+          builder: (BuildContext context, GoRouterState state) {
+            return UploadRecipePage();
           },
         ),
       ],
