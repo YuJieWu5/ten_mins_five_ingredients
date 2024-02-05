@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import './recipe_rating_form.dart';
 
 class RecipeDetail extends StatefulWidget {
   const RecipeDetail({super.key});
@@ -35,7 +35,16 @@ class _RecipeDetailState extends State<RecipeDetail> {
           title: _recipe['name']!=null?Text(_recipe['name']): const Text(""),
           actions: [
             IconButton(onPressed: (){}, icon: const Icon(Icons.bookmark_border_rounded)),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.rate_review_rounded)),
+            IconButton(
+                onPressed: (){
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return const RecipeRatingForm();
+                    },
+                  );
+                },
+                icon: const Icon(Icons.rate_review_rounded)),
           ],
       ),
 
