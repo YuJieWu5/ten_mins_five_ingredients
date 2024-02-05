@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ten_mins_five_ingredients/homepage.dart';
 import './recipe_rating_form.dart';
 
 class RecipeDetail extends StatefulWidget {
@@ -34,6 +35,12 @@ class _RecipeDetailState extends State<RecipeDetail> {
       appBar: AppBar(
           title: _recipe['name']!=null?Text(_recipe['name']): const Text(""),
           actions: [
+            IconButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            }, icon: const Icon(Icons.home)),
             IconButton(onPressed: (){}, icon: const Icon(Icons.bookmark_border_rounded)),
             IconButton(
                 onPressed: (){
