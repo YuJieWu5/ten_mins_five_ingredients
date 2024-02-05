@@ -1,0 +1,11 @@
+{
+    "name": "Creamy Mushroom Basil Pasta",
+    "image":"creamy_mushroom_basil_pasta.jpeg",
+    "ingredients": ["Mushroom", "Fresh basil", "Garlic butter sauce", "Vegan pasta"],
+    "instruction":[
+      "Bring a large pot of salted water to boil. Add the pasta and cook it according to the instructions on the package until it is al dente.",
+      "Slice the mushrooms and sprinkle a pinch of salt over them. Then, sauté the mushrooms in a pan until they turn golden brown and release their moisture. This should take about 5-7 minutes.",
+      "Add the garlic butter sauce and fresh basil to the mushrooms and stir until the sauce starts boiling.",
+      "add the cooked pasta to the mushroom mixture and stir everything together until the pasta is well coated in the sauce."
+    ]
+}
