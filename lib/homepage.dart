@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
             fontSize: 20,
           ),
         ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       body: SafeArea(
