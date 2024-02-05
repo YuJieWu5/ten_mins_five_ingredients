@@ -46,10 +46,10 @@ class _IngredientListPageState extends State<IngredientListPage> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RecipeList()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => RecipeList()),
+                // );
               },
               child: Text('Show me the recipes!'),
             ),

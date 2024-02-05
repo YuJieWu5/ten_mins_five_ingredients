@@ -14,6 +14,9 @@ class _LogInPageState extends State<LogInPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _onLoginPressed(){
+    // for testing purpose
+    context.go('/home');
+
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: verify account info
       if(_userNameController.text == "vv" && _passwordController.text == "123"){
