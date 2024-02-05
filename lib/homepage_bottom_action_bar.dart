@@ -19,13 +19,13 @@ class BottomActionBar extends StatelessWidget {
         IconButton(
           icon: Icon(Icons.account_circle),
           onPressed: () {
-            // Placeholder to navigate to profile
+            // TODO: Placeholder to navigate to profile
           },
         ),
         ElevatedButton(
           child: Text('Create Recipe'),
           onPressed: () {
-            // Placeholder to implement create function
+            // TODO: Placeholder to implement create function
           },
         ),
       ],
