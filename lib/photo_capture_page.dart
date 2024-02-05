@@ -14,7 +14,7 @@ class PhotoCapturePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             AspectRatio(
-              aspectRatio: 3/4, // Square box
+              aspectRatio: 3 / 4, // Square box
               child: Container(
                 margin: EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -22,6 +22,7 @@ class PhotoCapturePage extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text('Placeholder for camera widget'),
+                  // TODO: Implement camera widget
                 ),
               ),
             ),
@@ -43,9 +44,18 @@ class ActionBar extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
+              child: Text('Retake'),
+              onPressed: () {
+                // TODO: Retake the photo
+              },
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: ElevatedButton(
               child: Text('Confirm'),
               onPressed: () {
-                // Navigate to the Ingredients list
+                // TODO: Implement show recipes functionality
               },
             ),
           ),
