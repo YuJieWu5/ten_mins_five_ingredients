@@ -8,7 +8,7 @@ class BottomActionBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         ElevatedButton(
-          child: Text('Get Recipe'),
+          child: Text('📷 Get Recipe'),
           onPressed: () {
             Navigator.push(
               context,
