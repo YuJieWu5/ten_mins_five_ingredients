@@ -18,9 +18,7 @@ class BottomActionBar extends StatelessWidget {
         ),
         ElevatedButton(
           child: Text('Create Recipe'),
-          onPressed: () {
-            // TODO: Placeholder to implement create function
-          },
+          onPressed: () => context.go('/uploadRecipe'),
         ),
       ],
     );
