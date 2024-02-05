@@ -3,6 +3,8 @@ import 'homepage_bottom_action_bar.dart';
 import 'homepage_carousel_with_indicator.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final maxHeight = MediaQuery.of(context).size.height - 130;
