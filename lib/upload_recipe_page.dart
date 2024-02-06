@@ -20,9 +20,9 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
 
   // Method to pick image
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
     // Pick an image
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     // If an image is picked, update the state
     if (image != null) {
       setState(() {
@@ -143,13 +143,13 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _image != null ? Image.file(File(_image!.path)) : Text('No image selected.'),
+              _image != null ? Image.file(File(_image!.path)) : const Text('No image selected.'),
               ElevatedButton(
                 onPressed: _pickImage,
                 child: const Text('Select Image'),
               ),
               const Text('Ingredients:', style: TextStyle(fontSize: 20),),
-              Container(
+              SizedBox(
                 width: 500,
                 child: Column(
                   children: [
@@ -158,7 +158,7 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                 )
               ),
               const Text('Instructions:', style: TextStyle(fontSize: 20)),
-              Container(
+              SizedBox(
                   width: 500,
                   child: Column(
                     children: [

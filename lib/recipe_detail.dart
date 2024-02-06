@@ -38,7 +38,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
             IconButton(onPressed: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => const HomePage()),
               );
             }, icon: const Icon(Icons.home)),
             IconButton(onPressed: (){}, icon: const Icon(Icons.bookmark_border_rounded)),

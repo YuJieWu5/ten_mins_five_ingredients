@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'global_state.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -15,12 +17,13 @@ class _LogInPageState extends State<LogInPage> {
 
   void _onLoginPressed(){
     // for testing purpose
-    context.go('/home');
+    context.go('/');
+    context.read<GlobalState>().isLogin = true;
 
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: verify account info
       if(_userNameController.text == "vv" && _passwordController.text == "123"){
-        context.go('/home');
+        context.go('/');
       }
     }
   }

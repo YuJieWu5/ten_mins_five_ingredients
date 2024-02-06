@@ -40,7 +40,7 @@ class _RecipeRatingFormState extends State<RecipeRatingForm> {
 
   void _onSubmitPressed(){
     //TODO: send the rating score to database
-    print("Rating:"+ _rating.toString());
+    print("Rating:$_rating");
     Navigator.pop(context);
   }
 

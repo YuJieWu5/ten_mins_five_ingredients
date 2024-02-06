@@ -10,17 +10,10 @@ class BottomActionBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         ElevatedButton(
-            child: Text('Get Recipe'),
+            child: const Text('Get Recipe'),
             onPressed: () => context.go('/getRecipe')),
-        IconButton(
-          icon: Icon(Icons.account_circle),
-          onPressed: () {
-            // TODO: if already login, display the navigation drawer
-            context.go('/login');
-          },
-        ),
         ElevatedButton(
-          child: Text('Create Recipe'),
+          child: const Text('Create Recipe'),
           onPressed: () => context.go('/uploadRecipe'),
         ),
       ],

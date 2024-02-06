@@ -9,6 +9,8 @@ Future<void> initializeCameras() async {
 }
 
 class CameraWidget extends StatefulWidget {
+  const CameraWidget({super.key});
+
   @override
   _CameraWidgetState createState() => _CameraWidgetState();
 }
@@ -60,7 +62,7 @@ class _CameraWidgetState extends State<CameraWidget> {
   @override
   Widget build(BuildContext context) {
     if (controller == null || !controller!.value.isInitialized) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     return AspectRatio(
         aspectRatio: controller!.value.aspectRatio,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import './log_in.dart';
 import './sign_up.dart';
 import './homepage.dart';
@@ -7,6 +8,7 @@ import './recipe_list_page.dart';
 import './photo_capture_page.dart';
 import './recipe_detail.dart';
 import './upload_recipe_page.dart';
+import './global_state.dart';
 
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
@@ -49,13 +51,13 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: 'getRecipe',
           builder: (BuildContext context, GoRouterState state) {
-            return PhotoCapturePage();
+            return const PhotoCapturePage();
           },
         ),
         GoRoute(
           path: 'uploadRecipe',
           builder: (BuildContext context, GoRouterState state) {
-            return UploadRecipePage();
+            return const UploadRecipePage();
           },
         ),
       ],
@@ -72,15 +74,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-    );
-    //   MaterialApp(
-    //   title: '10mins5ingredients',
-    //   theme: ThemeData(
-    //     primarySwatch: Colors.blue,
-    //   ),
-    //   home: HomePage(),
-    // );
+    return ChangeNotifierProvider(
+        create: (context) => GlobalState(),
+        child: MaterialApp.router(
+          routerConfig: _router,
+        ));
   }
 }

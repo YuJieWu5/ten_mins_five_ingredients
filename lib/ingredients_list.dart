@@ -22,7 +22,7 @@ class _IngredientListPageState extends State<IngredientListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ingredient List'),
+        title: const Text('Ingredient List'),
         centerTitle: true,
       ),
       body: Column(
@@ -50,10 +50,10 @@ class _IngredientListPageState extends State<IngredientListPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RecipeList()),
+                  MaterialPageRoute(builder: (context) => const RecipeList()),
                 );
               },
-              child: Text('Show me the recipes!'),
+              child: const Text('Show me the recipes!'),
             ),
           ),
         ],

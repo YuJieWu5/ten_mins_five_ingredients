@@ -3,6 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ten_mins_five_ingredients/recipe_detail.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
+  const CarouselWithIndicator({super.key});
+
   @override
   _CarouselWithIndicatorState createState() => _CarouselWithIndicatorState();
 }
@@ -57,7 +59,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               // Navigate to the recipe details page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RecipeDetail()),
+                MaterialPageRoute(builder: (context) => const RecipeDetail()),
               );
             },
             child: Column(
@@ -97,7 +99,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
         carouselController: _controller,
         options: CarouselOptions(
           autoPlay: true,
-          autoPlayInterval: Duration(seconds: 2),
+          autoPlayInterval: const Duration(seconds: 2),
           enlargeCenterPage: true,
           aspectRatio: 3 / 4,
           onPageChanged: (index, reason) {

@@ -3,6 +3,8 @@ import 'ingredients_list.dart';
 import 'camera_widget.dart';
 
 class PhotoCapturePage extends StatelessWidget {
+  const PhotoCapturePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +24,10 @@ class PhotoCapturePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue, width: 2),
                 ),
-                child: CameraWidget(),
+                child: const CameraWidget(),
               ),
             ),
-            ActionBar(), // Confirm to use the photo
+            const ActionBar(), // Confirm to use the photo
           ],
         ),
       ),
@@ -34,29 +36,31 @@ class PhotoCapturePage extends StatelessWidget {
 }
 
 class ActionBar extends StatelessWidget {
+  const ActionBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: Text('Retake'),
+              child: const Text('Retake'),
               onPressed: () {
                 // TODO: Retake the photo
               },
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
-              child: Text('Confirm'),
+              child: const Text('Confirm'),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => IngredientListPage()),
+                  MaterialPageRoute(builder: (context) => const IngredientListPage()),
                 );
               },
             ),
