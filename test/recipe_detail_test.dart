@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ten_mins_five_ingredients/recipe_detail.dart';
-import 'package:ten_mins_five_ingredients/main.dart';
-import 'package:ten_mins_five_ingredients/homepage_carousel_with_indicator.dart';
 
 
 void main() {
@@ -14,7 +12,7 @@ void main() {
       home: RecipeDetail(),
     ));
 
-    // Verify that our counter starts at 0.¬
+    // Verify that our counter starts at 0.
     expect(find.byType(RecipeDetail), findsOneWidget);
     expect(find.text('Ingredients'), findsOneWidget);
     expect(find.text('Instruction'), findsOneWidget);
