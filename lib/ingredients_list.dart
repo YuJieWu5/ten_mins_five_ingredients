@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'ingredients.dart';
-import 'recipe_list_page.dart';
 
 class IngredientListPage extends StatefulWidget {
   const IngredientListPage({super.key});
@@ -48,10 +48,7 @@ class _IngredientListPageState extends State<IngredientListPage> {
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RecipeList()),
-                );
+                GoRouter.of(context).push('/recipeList');
               },
               child: const Text('Show me the recipes!'),
             ),

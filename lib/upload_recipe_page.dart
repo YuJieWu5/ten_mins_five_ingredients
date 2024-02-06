@@ -146,7 +146,7 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
               title: const Center(child: Text('Upload Successful')),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => context.go('/'),
+                  onPressed: () => GoRouter.of(context).push('/'),
                   child: const Text('OK'),
                 )
               ],
@@ -160,7 +160,13 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pick Image from Album'),
+        title: const Text('Upload Recipe'),
+        leading: GestureDetector(
+            child: const Icon(Icons.arrow_back_ios),
+            onTap: (){
+              GoRouter.of(context).pop();
+            }
+        ),
       ),
       body:SingleChildScrollView(
         child: Center(

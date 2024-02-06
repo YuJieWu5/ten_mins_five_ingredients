@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ten_mins_five_ingredients/homepage.dart';
@@ -34,6 +35,12 @@ class _RecipeDetailState extends State<RecipeDetail> {
     return Scaffold(
       appBar: AppBar(
           title: _recipe['name']!=null?Text(_recipe['name']): const Text(""),
+          leading: GestureDetector(
+              child: Icon(Icons.arrow_back_ios),
+              onTap: (){
+                GoRouter.of(context).pop();
+              }
+          ),
           actions: [
             IconButton(onPressed: (){
               Navigator.push(

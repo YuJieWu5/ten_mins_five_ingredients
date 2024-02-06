@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -24,6 +25,13 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
+        // automaticallyImplyLeading: false,
+        leading: GestureDetector(
+            child: Icon(Icons.arrow_back_ios, color: Theme.of(context).colorScheme.onPrimary),
+            onTap: (){
+              GoRouter.of(context).pop();
+            }
+        ),
         title: Center(
           child: Text('Sign Up', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
         ),
@@ -94,6 +102,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       onPressed: _onCreatePressed,
                       child: const Text('Create')
                   )
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                  onPressed: ()=> GoRouter.of(context).push('/login'),
+                  child: const Text('Log In'),
                 )
               ],
             ),

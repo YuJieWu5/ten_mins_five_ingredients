@@ -32,7 +32,15 @@ class _RecipeListState extends State<RecipeList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Recipe List')),
+      appBar: AppBar(
+          title: const Text('Recipe List'),
+          leading: GestureDetector(
+              child: Icon(Icons.arrow_back_ios),
+              onTap: (){
+                GoRouter.of(context).pop();
+              }
+          ),
+      ),
       body: ListView(
         children: _recipesList.map((item)=>ListTile(
           leading: CircleAvatar(
@@ -45,7 +53,7 @@ class _RecipeListState extends State<RecipeList> {
           subtitle: Text(item['score'].toString()),
           trailing: IconButton(
             icon: const Icon(Icons.chevron_right),
-            onPressed: ()=> context.go('/recipeDetail'),
+            onPressed: ()=> GoRouter.of(context).push('/recipeDetail'),
           ),
           isThreeLine: true,
         )).toList()

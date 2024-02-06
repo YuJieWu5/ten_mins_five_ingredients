@@ -17,13 +17,14 @@ class _LogInPageState extends State<LogInPage> {
 
   void _onLoginPressed(){
     // for testing purpose
-    context.go('/');
+    GoRouter.of(context).push('/');
     context.read<GlobalState>().isLogin = true;
+
 
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: verify account info
       if(_userNameController.text == "vv" && _passwordController.text == "123"){
-        context.go('/');
+        GoRouter.of(context).push('/');
       }
     }
   }
@@ -33,6 +34,12 @@ class _LogInPageState extends State<LogInPage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
+          leading: GestureDetector(
+              child: Icon(Icons.arrow_back_ios, color: Theme.of(context).colorScheme.onPrimary),
+              onTap: (){
+                GoRouter.of(context).pop();
+              }
+          ),
           title: Center(
               child: Text('Log In', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
           ),
@@ -86,6 +93,13 @@ class _LogInPageState extends State<LogInPage> {
                               onPressed: _onLoginPressed,
                               child: const Text('Log In')
                           )
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 16),
+                        ),
+                        onPressed: ()=> GoRouter.of(context).push('/signup'),
+                        child: const Text('Create Account'),
                       )
                     ],
                   ),
