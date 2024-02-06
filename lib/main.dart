@@ -13,13 +13,13 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const LogInPage();
+        return const HomePage();
       },
       routes: <RouteBase>[
         GoRoute(
-          path: 'home',
+          path: 'login',
           builder: (BuildContext context, GoRouterState state) {
-            return HomePage();
+            return const LogInPage();
           },
         ),
         GoRoute(
