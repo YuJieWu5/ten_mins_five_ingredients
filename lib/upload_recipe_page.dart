@@ -24,7 +24,6 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
   // Store dynamic TextField data for Instructions
   int _instructionsCount = 1;
   List<TextEditingController> _instructionsController = [TextEditingController()];
-  List<TextEditingController> _instructionsQuantityController = [TextEditingController()];
 
   // Method to pick image
   Future<void> _pickImage() async {
@@ -50,17 +49,31 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
         Card(
           child: Column(
             children: [
-              TextField(
+              TextFormField(
+                key: Key('Ingredient${(i+1).toString()}'),
                 decoration: const InputDecoration(
                   labelText: 'Ingredient'
                 ),
                 controller: _ingredientsController[i],
+                validator: (newValue){
+                  if(newValue == null || newValue.isEmpty) {
+                    return 'Ingredient can not be blank.';
+                  }
+                  return null;
+                },
               ),
-              TextField(
+              TextFormField(
+                key: Key('Quantity${(i+1).toString()}'),
                 decoration: const InputDecoration(
                     labelText: 'Quantity'
                 ),
                 controller: _ingredientsQuantityController[i],
+                validator: (newValue){
+                  if(newValue == null || newValue.isEmpty) {
+                    return 'Quantity can not be blank.';
+                  }
+                  return null;
+                },
               ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -70,7 +83,8 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                       _ingredientsCount = _ingredientsCount+1;
                     });
                   },
-                      icon: const Icon(Icons.add_circle_outlined)
+                  icon: const Icon(Icons.add_circle_outlined),
+                  key: Key('addIngredientButton${(i+1).toString()}'),
                   ),
                 IconButton(onPressed: (){
                   if(_ingredientsCount>1){
@@ -81,7 +95,8 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                     });
                   }
                 },
-                    icon: const Icon(Icons.remove_circle_outline)
+                  icon: const Icon(Icons.remove_circle_outline),
+                  key: Key('removeIngredientButton${(i+1).toString()}'),
                 )
               ],
             )
@@ -95,28 +110,26 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
 
   List<Widget> buildInstructionsTextField(int count) {
     List<Widget> instructionTextFieldList = [];
-    // _instructionsController = List.generate(count, (index) => TextEditingController());
-    // _instructionsQuantityController = List.generate(count, (index) => TextEditingController());
     for (int i = 0; i < count; i++) {
       if(i<_instructionsController.length){
         _instructionsController.add(TextEditingController());
-        _instructionsQuantityController.add(TextEditingController());
       }
       instructionTextFieldList.add(
           Card(
             child: Column(
               children: [
-                TextField(
+                TextFormField(
+                  key: Key('Instruction${(i+1).toString()}'),
                   decoration: const InputDecoration(
-                      labelText: 'Ingredient'
+                      labelText: 'Instruction'
                   ),
                   controller: _instructionsController[i],
-                ),
-                TextField(
-                  decoration: const InputDecoration(
-                      labelText: 'Quantity'
-                  ),
-                  controller: _instructionsQuantityController[i],
+                  validator: (newValue){
+                    if(newValue == null || newValue.isEmpty) {
+                      return 'Instruction can not be blank.';
+                    }
+                    return null;
+                  },
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -126,18 +139,19 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                         _instructionsCount = _instructionsCount+1;
                       });
                     },
-                        icon: const Icon(Icons.add_circle_outlined)
+                        icon: const Icon(Icons.add_circle_outlined),
+                        key: Key('addInstructionButton${(i+1).toString()}'),
                     ),
                     IconButton(onPressed: (){
                       if(_instructionsCount>1){
                         setState(() {
                           _instructionsCount = _instructionsCount-1;
-                          _instructionsQuantityController.removeAt(i);
                           _instructionsController.removeAt(i);
                         });
                       }
                     },
-                        icon: const Icon(Icons.remove_circle_outline)
+                        icon: const Icon(Icons.remove_circle_outline),
+                        key: Key('removeInstructionButton${(i+1).toString()}'),
                     )
                   ],
                 )
@@ -151,7 +165,9 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
 
   void _onUploadPressed(){
     //TODO: call uploadRecipe API, save input data to database
-    _openAlertDialog(context);
+    if(_formKey.currentState?.validate()??false) {
+      _openAlertDialog(context);
+    }
   }
 
   void _openAlertDialog(BuildContext context){
@@ -186,39 +202,49 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
         ),
       ),
       body:SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _image != null ? Image.file(File(_image!.path)) : const Text('No image selected.'),
-              ElevatedButton(
-                onPressed: _pickImage,
-                child: const Text('Select Image'),
-              ),
-              const Text('Ingredients:', style: TextStyle(fontSize: 20),),
-              SizedBox(
-                width: 500,
-                child: Column(
-                  children: [
-                    ...buildIngredientsTextField(_ingredientsCount)
-                  ],
-                )
-              ),
-              const Text('Instructions:', style: TextStyle(fontSize: 20)),
-              SizedBox(
+        child: Form(
+          key: _formKey,
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _image != null ? Image.file(
+                  File(_image!.path),
+                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace){
+                    return const Text('Can not load the image');
+                  }) :
+                  const Text('No image selected.'),
+                ElevatedButton(
+                  key: const Key('SelectImage'),
+                  onPressed: _pickImage,
+                  child: const Text('Select Image'),
+                ),
+                const Text('Ingredients:', style: TextStyle(fontSize: 20),),
+                SizedBox(
                   width: 500,
                   child: Column(
                     children: [
-                      ...buildInstructionsTextField(_instructionsCount)
+                      ...buildIngredientsTextField(_ingredientsCount)
                     ],
                   )
-              ),
-              ElevatedButton(
-                  onPressed: _onUploadPressed,
-                  child: const Text("Upload")
-              )
-            ],
-          ),
+                ),
+                const Text('Instructions:', style: TextStyle(fontSize: 20)),
+                SizedBox(
+                    width: 500,
+                    child: Column(
+                      children: [
+                        ...buildInstructionsTextField(_instructionsCount)
+                      ],
+                    )
+                ),
+                ElevatedButton(
+                    key: const Key('Upload'),
+                    onPressed: _onUploadPressed,
+                    child: const Text("Upload")
+                )
+              ],
+            ),
+          )
         ),
       )
     );
