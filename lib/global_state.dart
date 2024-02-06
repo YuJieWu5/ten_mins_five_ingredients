@@ -1,7 +1,16 @@
 import 'package:flutter/foundation.dart';
 
 class GlobalState with ChangeNotifier {
-  bool isLogin;
+  bool _isLoginStatus;
 
-  GlobalState(): isLogin = false;
+  GlobalState(this._isLoginStatus);
+
+  bool getLoginStatus(){
+    return _isLoginStatus;
+  }
+
+  void setLoginStatus(bool status){
+    _isLoginStatus = status;
+    notifyListeners();
+  }
 }
