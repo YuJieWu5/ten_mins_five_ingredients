@@ -9,15 +9,17 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+
   @override
   Widget build(BuildContext context) {
     final maxHeight = MediaQuery.of(context).size.height - 150;
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -28,25 +30,25 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: <Widget>[
-          context.read<GlobalState>().isLogin
+          context.watch<GlobalState>().getLoginStatus()
               ? _userAvatarButton()
               : _loginButton(),
         ],
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
-      drawer: context.read<GlobalState>().isLogin ? _userDrawer() : null,
-      body: SafeArea(
+      drawer: context.watch<GlobalState>().getLoginStatus() ? _userDrawer() : null,
+      body: const SafeArea(
         child: Column(
           children: <Widget>[
             Expanded(
-              child: const CarouselWithIndicator(),
+              child: CarouselWithIndicator(),
             ),
-            const SizedBox(
+            SizedBox(
               height: 40,
               child: BottomActionBar(),
             ),
-            const SizedBox(
+            SizedBox(
               height: 8,
             )
           ],
@@ -94,6 +96,13 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Created List'),
             onTap: () {
               GoRouter.of(context).push("/recipeList");
+            },
+          ),
+          ListTile(
+            title: const Text('Log Out'),
+            onTap: () {
+              context.read<GlobalState>().setLoginStatus(false);
+              // GoRouter.of(context).push("/login ");
             },
           ),
         ],
