@@ -12,13 +12,6 @@ class BottomActionBar extends StatelessWidget {
         ElevatedButton(
             child: const Text('Get Recipe'),
             onPressed: () => GoRouter.of(context).push('/getRecipe')),
-        IconButton(
-          icon: const Icon(Icons.account_circle),
-          onPressed: () {
-            // TODO: if already login, display the navigation drawer
-            GoRouter.of(context).push('/login');
-          },
-        ),
         ElevatedButton(
           child: const Text('Create Recipe'),
           onPressed: () => GoRouter.of(context).push('/uploadRecipe'),
