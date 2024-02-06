@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ten_mins_five_ingredients/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ten_mins_five_ingredients/log_in.dart';
 
 main(){
   testWidgets('Test Sign Up if confirm password incorrect', (WidgetTester tester)async {
@@ -57,5 +59,29 @@ main(){
     await tester.pump();
 
     expect(find.text('Password must not be blank.'), findsOneWidget);
+  });
+
+  testWidgets("Test navigate to Log In", (WidgetTester tester) async {
+    final GoRouter router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (BuildContext context, GoRouterState state) => SignUpPage(),
+        ),
+        GoRoute(
+          path: '/login',
+          builder: (BuildContext context, GoRouterState state) => LogInPage(),
+        )
+      ],
+    );
+    await tester.pumpWidget(
+        MaterialApp.router(
+            routerConfig: router
+        )
+    );
+    
+    await tester.tap(find.byType(TextButton));
+    expect(find.text('Log In'), findsAny);
+
   });
 }
