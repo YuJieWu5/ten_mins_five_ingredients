@@ -41,9 +41,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-*.lock
-ios/*
-macos/*
-linux/*
-windows/*
+.lock
+ios/
+macos/
+linux/
+windows/
 pubspec.lock
