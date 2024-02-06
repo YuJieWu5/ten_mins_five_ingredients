@@ -15,7 +15,8 @@ class BottomActionBar extends StatelessWidget {
         IconButton(
           icon: Icon(Icons.account_circle),
           onPressed: () {
-            // TODO: Placeholder to navigate to profile
+            // TODO: if already login, display the navigation drawer
+            context.go('/login');
           },
         ),
         ElevatedButton(
