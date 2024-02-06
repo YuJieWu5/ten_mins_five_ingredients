@@ -52,6 +52,7 @@ class _RecipeListState extends State<RecipeList> {
           title: Text(item['name']),
           subtitle: Text(item['score'].toString()),
           trailing: IconButton(
+            key: Key(item['name']),
             icon: const Icon(Icons.chevron_right),
             onPressed: ()=> GoRouter.of(context).push('/recipeDetail'),
           ),
