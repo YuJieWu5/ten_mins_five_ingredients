@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ingredients_list.dart';
+import 'camera_widget.dart';
 
 class PhotoCapturePage extends StatelessWidget {
   @override
@@ -21,10 +22,7 @@ class PhotoCapturePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue, width: 2),
                 ),
-                child: Center(
-                  child: Text('Placeholder for camera widget'),
-                  // TODO: Implement camera widget
-                ),
+                child: CameraWidget(),
               ),
             ),
             ActionBar(), // Confirm to use the photo
