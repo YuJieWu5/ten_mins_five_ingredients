@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   void _onCreatePressed(){
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: save account info to database
+      // GoRouter.of(context).push('/login');
     }
   }
 
@@ -48,6 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: SizedBox(
                       width: 400.0,
                       child: TextFormField(
+                        key: const Key('Username'),
                         decoration: const InputDecoration(
                             labelText: 'Username'
                         ),
@@ -65,6 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: 400.0,
                   child: TextFormField(
+                    key: const Key('Password'),
                     decoration: const InputDecoration(
                         labelText: 'Password'
                     ),
@@ -80,6 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   width: 400.0,
                   child: TextFormField(
+                    key: const Key('ConfirmPassword'),
                     decoration: const InputDecoration(
                         labelText: 'Confirm Password'
                     ),
@@ -87,7 +91,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     validator: (newValue) {
                       if(newValue == null || newValue.isEmpty) {
                         return 'Confirm Password must not be blank.';
-                      }else if(_passwordController != newValue){
+                      }else if(_passwordController.text != _confirmPasswordController.text){
                         return 'Passwords must be same.';
                       }
                       return null;
