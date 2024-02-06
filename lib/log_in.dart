@@ -18,7 +18,7 @@ class _LogInPageState extends State<LogInPage> {
   void _onLoginPressed(){
     // for testing purpose
     GoRouter.of(context).push('/');
-    context.read<GlobalState>().isLogin = true;
+    context.read<GlobalState>().setLoginStatus(true);
 
 
     if(_formKey.currentState?.validate() ?? false) {
