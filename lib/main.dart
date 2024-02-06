@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => GlobalState(),
+        create: (context) => GlobalState(false),
         child: MaterialApp.router(
           routerConfig: _router,
         ));
