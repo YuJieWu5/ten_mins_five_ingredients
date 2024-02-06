@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     return IconButton(
       icon: const Icon(Icons.login),
       onPressed: () {
-        context.go('/login');
+        GoRouter.of(context).push('/login');
       },
     );
   }
@@ -87,13 +87,13 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             title: const Text('Saved List'),
             onTap: () {
-              context.go("/recipeList");
+              GoRouter.of(context).push("/recipeList");
             },
           ),
           ListTile(
             title: const Text('Created List'),
             onTap: () {
-              context.go("/recipeList");
+              GoRouter.of(context).push("/recipeList");
             },
           ),
         ],
