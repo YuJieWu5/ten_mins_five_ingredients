@@ -1,4 +1,4 @@
-lib/recipe_list_page.dartimport 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ten_mins_five_ingredients/recipe_list_page.dart';
