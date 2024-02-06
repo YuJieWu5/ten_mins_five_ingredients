@@ -13,6 +13,7 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
   XFile? _image; // This will hold the selected image
   int _ingredientsCount = 1;
   List<TextEditingController> _ingredientsController = [];
+  List<TextEditingController> _ingredientsQuantityController = [];
   int _instructionsCount = 1;
   List<TextEditingController> _instructionsController = [];
 
@@ -32,48 +33,50 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
   List<Widget> buildIngredientsTextField(int count) {
     List<Widget> IngredientsTextFieldList = [];
     _ingredientsController = List.generate(count, (index) => TextEditingController());
+    _ingredientsQuantityController = List.generate(count, (index) => TextEditingController());
     for (int i = 0; i < count; i++) {
       IngredientsTextFieldList.add(
-          Container(
-            padding: const EdgeInsets.only(right: 5.0, left: 5.0),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Card(
+          child: Column(
+            children: [
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Ingredient'
+                ),
+                controller: _ingredientsController[i],
+              ),
+              TextField(
+                decoration: const InputDecoration(
+                    labelText: 'Quantity'
+                ),
+                controller: _ingredientsQuantityController[i],
+              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-
-                SizedBox(
-                    width: 300,
-                    child: TextField(
-                      controller: _ingredientsController[i],
-                    )
-                ),
-                SizedBox(
-                    width: 50,
-                    child: IconButton(onPressed: (){
-                      setState(() {
-                        _ingredientsCount = _ingredientsCount+1;
-                      });
-                    },
-                        icon: const Icon(Icons.add_circle_outlined)
-                    )
-                ),
-                SizedBox(
-                    width: 50,
-                    child: IconButton(onPressed: (){
-                      if(_ingredientsCount>1){
-                        setState(() {
-                          _ingredientsCount = _ingredientsCount-1;
-                        });
-                      }
-                    },
-                        icon: const Icon(Icons.remove_circle_outline)
-                    )
-                ),
+                IconButton(onPressed: (){
+                    setState(() {
+                      _ingredientsCount = _ingredientsCount+1;
+                    });
+                  },
+                      icon: const Icon(Icons.add_circle_outlined)
+                  ),
+                IconButton(onPressed: (){
+                  if(_ingredientsCount>1){
+                    setState(() {
+                      _ingredientsCount = _ingredientsCount-1;
+                    });
+                  }
+                },
+                    icon: const Icon(Icons.remove_circle_outline)
+                )
               ],
             )
-          )
+            ],
+          ),
+        )
       );
     }
-
     return IngredientsTextFieldList;
   }
 
@@ -84,27 +87,38 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
       appBar: AppBar(
         title: const Text('Pick Image from Album'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _image != null ? Image.file(File(_image!.path)) : Text('No image selected.'),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: const Text('Select Image'),
-            ),
-            const Text('Ingredients:', style: TextStyle(fontSize: 20),),
-            Container(
-              width: 500,
-              child: Column(
-                children: [
-                  ...buildIngredientsTextField(_ingredientsCount)
-                ],
-              )
-            ),
-          ],
+      body:SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _image != null ? Image.file(File(_image!.path)) : Text('No image selected.'),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: const Text('Select Image'),
+              ),
+              const Text('Ingredients:', style: TextStyle(fontSize: 20),),
+              Container(
+                width: 500,
+                child: Column(
+                  children: [
+                    ...buildIngredientsTextField(_ingredientsCount)
+                  ],
+                )
+              ),
+              const Text('Ingredients:', style: TextStyle(fontSize: 20),),
+              Container(
+                  width: 500,
+                  child: Column(
+                    children: [
+                      ...buildIngredientsTextField(_ingredientsCount)
+                    ],
+                  )
+              ),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }
