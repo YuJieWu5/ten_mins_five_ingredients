@@ -16,6 +16,7 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
   List<TextEditingController> _ingredientsQuantityController = [];
   int _instructionsCount = 1;
   List<TextEditingController> _instructionsController = [];
+  List<TextEditingController> _instructionsQuantityController = [];
 
   // Method to pick image
   Future<void> _pickImage() async {
@@ -31,11 +32,11 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
   }
 
   List<Widget> buildIngredientsTextField(int count) {
-    List<Widget> IngredientsTextFieldList = [];
+    List<Widget> ingredientTextFieldList = [];
     _ingredientsController = List.generate(count, (index) => TextEditingController());
     _ingredientsQuantityController = List.generate(count, (index) => TextEditingController());
     for (int i = 0; i < count; i++) {
-      IngredientsTextFieldList.add(
+      ingredientTextFieldList.add(
         Card(
           child: Column(
             children: [
@@ -77,7 +78,57 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
         )
       );
     }
-    return IngredientsTextFieldList;
+    return ingredientTextFieldList;
+  }
+
+  List<Widget> buildInstructionsTextField(int count) {
+    List<Widget> instructionTextFieldList = [];
+    _instructionsController = List.generate(count, (index) => TextEditingController());
+    _instructionsQuantityController = List.generate(count, (index) => TextEditingController());
+    for (int i = 0; i < count; i++) {
+      instructionTextFieldList.add(
+          Card(
+            child: Column(
+              children: [
+                TextField(
+                  decoration: const InputDecoration(
+                      labelText: 'Ingredient'
+                  ),
+                  controller: _instructionsController[i],
+                ),
+                TextField(
+                  decoration: const InputDecoration(
+                      labelText: 'Quantity'
+                  ),
+                  controller: _instructionsQuantityController[i],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    IconButton(onPressed: (){
+                      setState(() {
+                        _instructionsCount = _instructionsCount+1;
+                      });
+                    },
+                        icon: const Icon(Icons.add_circle_outlined)
+                    ),
+                    IconButton(onPressed: (){
+                      if(_instructionsCount>1){
+                        setState(() {
+                          _instructionsCount = _instructionsCount-1;
+                        });
+                      }
+                    },
+                        icon: const Icon(Icons.remove_circle_outline)
+                    )
+                  ],
+                )
+              ],
+            ),
+          )
+      );
+    }
+    return instructionTextFieldList;
   }
 
 
@@ -106,15 +157,19 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                   ],
                 )
               ),
-              const Text('Ingredients:', style: TextStyle(fontSize: 20),),
+              const Text('Instructions:', style: TextStyle(fontSize: 20)),
               Container(
                   width: 500,
                   child: Column(
                     children: [
-                      ...buildIngredientsTextField(_ingredientsCount)
+                      ...buildInstructionsTextField(_instructionsCount)
                     ],
                   )
               ),
+              ElevatedButton(
+                  onPressed: (){},
+                  child: const Text("Upload")
+              )
             ],
           ),
         ),
