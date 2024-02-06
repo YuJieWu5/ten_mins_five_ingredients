@@ -11,13 +11,20 @@ class UploadRecipePage extends StatefulWidget {
 }
 
 class _UploadRecipePageState extends State<UploadRecipePage> {
-  XFile? _image; // This will hold the selected image
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // This will hold the selected image
+  XFile? _image;
+
+  // Store dynamic TextField data for Ingredients
   int _ingredientsCount = 1;
-  List<TextEditingController> _ingredientsController = [];
-  List<TextEditingController> _ingredientsQuantityController = [];
+  List<TextEditingController> _ingredientsController = [TextEditingController()];
+  List<TextEditingController> _ingredientsQuantityController = [TextEditingController()];
+
+  // Store dynamic TextField data for Instructions
   int _instructionsCount = 1;
-  List<TextEditingController> _instructionsController = [];
-  List<TextEditingController> _instructionsQuantityController = [];
+  List<TextEditingController> _instructionsController = [TextEditingController()];
+  List<TextEditingController> _instructionsQuantityController = [TextEditingController()];
 
   // Method to pick image
   Future<void> _pickImage() async {
@@ -34,9 +41,11 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
 
   List<Widget> buildIngredientsTextField(int count) {
     List<Widget> ingredientTextFieldList = [];
-    _ingredientsController = List.generate(count, (index) => TextEditingController());
-    _ingredientsQuantityController = List.generate(count, (index) => TextEditingController());
     for (int i = 0; i < count; i++) {
+      if( i<_ingredientsController.length ){
+        _ingredientsController.add(TextEditingController());
+        _ingredientsQuantityController.add(TextEditingController());
+      }
       ingredientTextFieldList.add(
         Card(
           child: Column(
@@ -66,6 +75,8 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                 IconButton(onPressed: (){
                   if(_ingredientsCount>1){
                     setState(() {
+                      _ingredientsQuantityController.removeAt(i);
+                      _ingredientsController.removeAt(i);
                       _ingredientsCount = _ingredientsCount-1;
                     });
                   }
@@ -84,9 +95,13 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
 
   List<Widget> buildInstructionsTextField(int count) {
     List<Widget> instructionTextFieldList = [];
-    _instructionsController = List.generate(count, (index) => TextEditingController());
-    _instructionsQuantityController = List.generate(count, (index) => TextEditingController());
+    // _instructionsController = List.generate(count, (index) => TextEditingController());
+    // _instructionsQuantityController = List.generate(count, (index) => TextEditingController());
     for (int i = 0; i < count; i++) {
+      if(i<_instructionsController.length){
+        _instructionsController.add(TextEditingController());
+        _instructionsQuantityController.add(TextEditingController());
+      }
       instructionTextFieldList.add(
           Card(
             child: Column(
@@ -117,6 +132,8 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                       if(_instructionsCount>1){
                         setState(() {
                           _instructionsCount = _instructionsCount-1;
+                          _instructionsQuantityController.removeAt(i);
+                          _instructionsController.removeAt(i);
                         });
                       }
                     },
