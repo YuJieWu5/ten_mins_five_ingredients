@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:ten_mins_five_ingredients/recipe_detail.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
   @override
@@ -18,8 +19,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
       'likes': 273,
       'score': 4.8
     },
-    {
-      'image': 'omelet.jpg',
+    { 'image': 'omelet.jpg',
       'name': 'Omelet',
       'likes': 209,
       'score': 4.6
@@ -52,42 +52,52 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
         itemCount: _recipeData.length,
         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
           var recipe = _recipeData[itemIndex];
-          return Column(
-            children: [
-              Expanded(
-                child: Container(
-                  child: Image.asset(
-                    'assets/images/${recipe['image']}',
-                    fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () {
+              // Navigate to the recipe details page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RecipeDetail()),
+              );
+            },
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: Image.asset(
+                      'assets/images/${recipe['image']}',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  recipe['name'],
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    recipe['name'],
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...buildHearts(recipe['score']),
-                    Text(' (${recipe['likes']})'),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ...buildHearts(recipe['score']),
+                      Text(' (${recipe['likes']})'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
         carouselController: _controller,
         options: CarouselOptions(
-          autoPlay: false,
+          autoPlay: true,
+          autoPlayInterval: Duration(seconds: 2),
           enlargeCenterPage: true,
           aspectRatio: 3 / 4,
           onPageChanged: (index, reason) {
@@ -105,7 +115,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             child: Container(
               width: 8.0,
               height: 8.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              margin:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: _current == entry.key
