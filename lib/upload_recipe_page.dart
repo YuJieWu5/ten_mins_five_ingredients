@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 
 class UploadRecipePage extends StatefulWidget {
   const UploadRecipePage({super.key});
@@ -131,6 +132,29 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
     return instructionTextFieldList;
   }
 
+  void _onUploadPressed(){
+    //TODO: call uploadRecipe API, save input data to database
+    _openAlertDialog(context);
+  }
+
+  void _openAlertDialog(BuildContext context){
+    //TODO: save the recipe data to database
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const Center(child: Text('Upload Successful')),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => context.go('/'),
+                  child: const Text('OK'),
+                )
+              ],
+          );
+        }
+      );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +191,7 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                   )
               ),
               ElevatedButton(
-                  onPressed: (){},
+                  onPressed: _onUploadPressed,
                   child: const Text("Upload")
               )
             ],
