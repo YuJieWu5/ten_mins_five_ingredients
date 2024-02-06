@@ -15,12 +15,12 @@ class _LogInPageState extends State<LogInPage> {
 
   void _onLoginPressed(){
     // for testing purpose
-    context.go('/home');
+    context.go('/');
 
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: verify account info
       if(_userNameController.text == "vv" && _passwordController.text == "123"){
-        context.go('/home');
+        context.go('/');
       }
     }
   }
