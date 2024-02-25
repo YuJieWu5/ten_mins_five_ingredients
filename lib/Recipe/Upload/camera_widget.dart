@@ -42,7 +42,12 @@ class _CameraWidgetState extends State<CameraWidget> {
       print("No cameras are available");
       return;
     }
-    controller = CameraController(cameras[0], ResolutionPreset.high);
+    final frontCamera = cameras.firstWhere(
+          (camera) => camera.lensDirection == CameraLensDirection.back,
+      orElse: () => cameras.first,
+    );
+
+    controller = CameraController(frontCamera, ResolutionPreset.high);
     controller!.initialize().then((_) {
       if (!mounted) {
         return;
