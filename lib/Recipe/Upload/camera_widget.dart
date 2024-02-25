@@ -1,6 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+
+import '../../global_state.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -10,6 +13,7 @@ Future<void> initializeCameras() async {
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({super.key});
+
 
   @override
   _CameraWidgetState createState() => _CameraWidgetState();
@@ -25,20 +29,17 @@ class _CameraWidgetState extends State<CameraWidget> {
   }
 
   Future<void> requestCameraPermission() async {
-    // Request camera permission
     var status = await Permission.camera.status;
     if (!status.isGranted) {
       await Permission.camera.request();
     }
 
-    // After obtaining permission, initialize the camera
     initializeCamera();
   }
 
   Future<void> initializeCamera() async {
     await initializeCameras();
     if (cameras.isEmpty) {
-      // No available cameras
       print("No cameras are available");
       return;
     }
@@ -52,6 +53,8 @@ class _CameraWidgetState extends State<CameraWidget> {
       if (!mounted) {
         return;
       }
+      final globalState = context.read<GlobalState>();
+      globalState.setCameraController(controller);
       setState(() {});
     }).catchError((error) {
       print("Error initializing camera: $error");
@@ -71,6 +74,6 @@ class _CameraWidgetState extends State<CameraWidget> {
     }
     return AspectRatio(
         aspectRatio: controller!.value.aspectRatio,
-        child: CameraPreview(controller!)); // Display the camera preview with correct aspect ratio
+        child: CameraPreview(controller!));
   }
 }
