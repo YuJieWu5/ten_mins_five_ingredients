@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ten_mins_five_ingredients/recipe_detail.dart';
+import 'package:ten_mins_five_ingredients/Home/recipe_detail.dart';
 
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ten_mins_five_ingredients/recipe_detail.dart';
+import './recipe_detail.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
   const CarouselWithIndicator({super.key});

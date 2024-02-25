@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ten_mins_five_ingredients/camera_widget.dart';
-import 'package:ten_mins_five_ingredients/photo_capture_page.dart';
+import 'package:ten_mins_five_ingredients/Recipe/Upload/camera_widget.dart';
+import 'package:ten_mins_five_ingredients/Recipe/Upload/photo_capture_page.dart';
 
 
 void main() {

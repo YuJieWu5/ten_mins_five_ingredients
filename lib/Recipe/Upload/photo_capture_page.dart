@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ingredients_list.dart';
+import '../../ingredients_list.dart';
 import 'camera_widget.dart';
 
 class PhotoCapturePage extends StatelessWidget {

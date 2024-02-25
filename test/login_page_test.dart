@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ten_mins_five_ingredients/main.dart';
-import 'package:ten_mins_five_ingredients/log_in.dart';
+import 'package:ten_mins_five_ingredients/User/log_in.dart';
 
 void main() {
   testWidgets('Login_page test', (WidgetTester tester) async {
