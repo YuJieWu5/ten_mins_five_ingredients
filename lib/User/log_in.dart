@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../global_state.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -14,20 +17,44 @@ class _LogInPageState extends State<LogInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _userNameController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final ref = FirebaseDatabase.instance.ref();
+  String? invalidUser;
 
-  void _onLoginPressed(){
-    // for testing purpose
-    GoRouter.of(context).push('/');
-    context.read<GlobalState>().setLoginStatus(true);
-
-
+  void _onLoginPressed() async{
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: verify account info
-      if(_userNameController.text == "vv" && _passwordController.text == "123"){
-        GoRouter.of(context).push('/');
+
+      final snapshot = await ref.child('users/').get();
+      if (snapshot.exists) {
+        String dataString = jsonEncode(snapshot.value);
+        print("Data String: $dataString");
+        Map dataMap = jsonDecode(dataString);
+        bool hasUser = _containsUser(dataMap, _userNameController.text, int.parse(_passwordController.text));
+        if(hasUser){
+          GoRouter.of(context).push('/');
+          context.read<GlobalState>().setLoginStatus(true);
+        }else{
+         setState(() {
+           invalidUser = "User name not found or Incorrect password";
+         });
+        }
+      } else {
+        print('No data available.');
       }
     }
   }
+
+  bool _containsUser(Map data, String name, int password) {
+    // Iterate through all values in the data map
+    for (var user in data.values) {
+      // Check if any user matches the name and password
+      if (user['name'] == name && user['password'] == password) {
+        return true; // Match found
+      }
+    }
+    return false; // No match found
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +112,9 @@ class _LogInPageState extends State<LogInPage> {
                           },
                         ),
                       ),
+                      invalidUser != null
+                          ? Text(invalidUser!, style: const TextStyle(color: Colors.red, fontSize: 12))
+                          : Container(),
                       Container(
                           margin: const EdgeInsets.only(top:20.0),
                           child: ElevatedButton(
