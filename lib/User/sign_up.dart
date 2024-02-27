@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -13,11 +14,34 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _userNameController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  DatabaseReference ref = FirebaseDatabase.instance.ref("users/");
 
-  void _onCreatePressed(){
+  void _onCreatePressed() async{
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: save account info to database
       // GoRouter.of(context).push('/login');
+      // try{
+      //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      //       email: _userNameController.text,
+      //       password: _passwordController.text
+      //   );
+      // }on FirebaseAuthException catch(ex){
+      //   print(ex.code);
+      //   print(ex.message);
+      // }
+      // final ref = FirebaseDatabase.instance.ref();
+      // final snapshot = await ref.child('users/').get();
+      // if (snapshot.exists) {
+      //   print(snapshot.value);
+      // } else {
+      //   print('No data available.');
+      // }
+        await ref.push().set({
+          "name": _userNameController.text,
+          "password": int.parse(_passwordController.text),
+        }).catchError((error){
+          print(error);
+        });
     }
   }
 

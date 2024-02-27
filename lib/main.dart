@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/firebase_options.dart';
 import 'User/log_in.dart';
 import 'User/sign_up.dart';
 import 'Home/homepage.dart';
@@ -9,6 +11,7 @@ import 'Recipe/Upload/photo_capture_page.dart';
 import 'Home/recipe_detail.dart';
 import 'Recipe/Upload/upload_recipe_page.dart';
 import './global_state.dart';
+import 'firebase_initializer.dart';
 
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
@@ -66,7 +69,8 @@ final GoRouter _router = GoRouter(
 );
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(const FirebaseInitializer());
 }
 
 class MyApp extends StatelessWidget {
