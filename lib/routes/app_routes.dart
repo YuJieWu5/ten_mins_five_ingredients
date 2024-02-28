@@ -8,7 +8,7 @@ import 'package:ten_mins_five_ingredients/views/Recipe/RecipeList/recipe_list_pa
 import 'package:ten_mins_five_ingredients/views/Recipe/Upload/photo_capture_page.dart';
 import 'package:ten_mins_five_ingredients/views/Home/recipe_detail.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/Upload/upload_recipe_page.dart';
-
+import 'package:ten_mins_five_ingredients/views/Recipe/RecipeList/save_list.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
@@ -64,6 +64,12 @@ final GoRouter router = GoRouter(
           path: 'ingredientList',
           builder: (BuildContext context, GoRouterState state) {
             return const IngredientListPage();
+          },
+        ),
+        GoRoute(
+          path: 'saveList',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SaveList();
           },
         ),
       ],
