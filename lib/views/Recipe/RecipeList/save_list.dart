@@ -87,7 +87,8 @@ class _SaveListState extends State<SaveList> {
                 trailing: IconButton(
                   key: Key(item['title']),
                   icon: const Icon(Icons.chevron_right),
-                  onPressed: () => GoRouter.of(context).push('/recipeDetail'),
+                  onPressed: () => GoRouter.of(context).push('/recipeDetail', extra: item),
+                  // onPressed: () => GoRouter.of(context).push('/recipeDetail'),
                 ),
                 isThreeLine: true,
               )).toList(),
