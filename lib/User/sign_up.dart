@@ -29,13 +29,6 @@ class _SignUpPageState extends State<SignUpPage> {
       //   print(ex.code);
       //   print(ex.message);
       // }
-      // final ref = FirebaseDatabase.instance.ref();
-      // final snapshot = await ref.child('users/').get();
-      // if (snapshot.exists) {
-      //   print(snapshot.value);
-      // } else {
-      //   print('No data available.');
-      // }
         await ref.push().set({
           "name": _userNameController.text,
           "password": int.parse(_passwordController.text),

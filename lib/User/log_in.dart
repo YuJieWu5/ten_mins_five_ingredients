@@ -27,7 +27,7 @@ class _LogInPageState extends State<LogInPage> {
       final snapshot = await ref.child('users/').get();
       if (snapshot.exists) {
         String dataString = jsonEncode(snapshot.value);
-        print("Data String: $dataString");
+        // print("Data String: $dataString");
         Map dataMap = jsonDecode(dataString);
         bool hasUser = _containsUser(dataMap, _userNameController.text, int.parse(_passwordController.text));
         if(hasUser){
@@ -46,9 +46,12 @@ class _LogInPageState extends State<LogInPage> {
 
   bool _containsUser(Map data, String name, int password) {
     // Iterate through all values in the data map
-    for (var user in data.values) {
+    for (var user in data.entries) {
       // Check if any user matches the name and password
-      if (user['name'] == name && user['password'] == password) {
+      var id = user.key;
+      var info = user.value;
+      if (info['name'] == name && info['password'] == password) {
+        context.read<GlobalState>().setUserId(id);
         return true; // Match found
       }
     }

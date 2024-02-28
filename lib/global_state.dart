@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 class GlobalState with ChangeNotifier {
   bool _isLoginStatus;
   CameraController? _cameraController;
+  String? _userId;
 
   GlobalState(this._isLoginStatus);
 
@@ -13,6 +14,15 @@ class GlobalState with ChangeNotifier {
 
   void setLoginStatus(bool status){
     _isLoginStatus = status;
+    notifyListeners();
+  }
+
+  String? getUserId(){
+    return _userId ?? "";
+  }
+
+  void setUserId(String id){
+    _userId = id;
     notifyListeners();
   }
 
