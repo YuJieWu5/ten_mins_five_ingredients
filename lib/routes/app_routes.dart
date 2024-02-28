@@ -45,7 +45,8 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'recipeDetail',
           builder: (BuildContext context, GoRouterState state) {
-            return const RecipeDetail();
+            final Map recipe = state.extra as Map;
+            return RecipeDetail(recipe: recipe);
           },
         ),
         GoRoute(
