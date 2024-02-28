@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             title: const Text('Saved List'),
             onTap: () {
-              GoRouter.of(context).push("/recipeList");
+              GoRouter.of(context).push("/saveList");
             },
           ),
           ListTile(

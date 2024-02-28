@@ -4,8 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
-
 import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 
 class UploadRecipePage extends StatefulWidget {
   const UploadRecipePage({super.key});
@@ -23,25 +24,12 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
 
   // Store dynamic TextField data for Ingredients
   int _ingredientsCount = 1;
-  List<TextEditingController> _ingredientsController = [TextEditingController()];
-  List<TextEditingController> _ingredientsQuantityController = [TextEditingController()];
+  final List<TextEditingController> _ingredientsController = [TextEditingController()];
+  final List<TextEditingController> _ingredientsQuantityController = [TextEditingController()];
 
   // Store dynamic TextField data for Instructions
   int _instructionsCount = 1;
-  List<TextEditingController> _instructionsController = [TextEditingController()];
-
-  // Method to pick image
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    // Pick an image
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    // If an image is picked, update the state
-    if (image != null) {
-      setState(() {
-        _image = image;
-      });
-    }
-  }
+  final List<TextEditingController> _instructionsController = [TextEditingController()];
 
   List<Widget> buildIngredientsTextField(int count) {
     List<Widget> ingredientTextFieldList = [];
@@ -168,9 +156,23 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
     return instructionTextFieldList;
   }
 
+  // Method to pick image
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    // Pick an image
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    // If an image is picked, update the state
+    if (image != null) {
+      setState(() {
+        _image = image;
+      });
+      // uploadFile(_image);
+    }
+  }
+
   void _onUploadPressed() async {
     //TODO: call uploadRecipe API, save input data to database
-    if(_formKey.currentState?.validate()??false) {
+    if(_image!=null && (_formKey.currentState?.validate()??false)) {
       List<String> ingredients = [];
       List<String> instructions = [];
       for(int i=0; i<_ingredientsCount; i++){
@@ -181,20 +183,39 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
       }
 
       await ref.push().set({
-        "creator": context.read<GlobalState>().getUserId,
-        "image": "", //upload the image to storage, only store image name in database
+        "creator": context.read<GlobalState>().getUserId(),
+        "image": _image!.name, //upload the image to storage, only store image name in database
         "ingredient": ingredients,
         "instruction": instructions,
         "rating": 0,
         "rating-count": 0,
         "title": _titleController.text
       }).then((value){
-        _openAlertDialog(context);
+        uploadFile(_image);
       }).catchError((error){
         //TODO: display error message to notify the user
         print(error);
       });
+    }
+  }
 
+  Future<void> uploadFile(XFile? file) async {
+    // Create a reference to the location you want to upload to in Firebase Storage
+    Reference storageReference = FirebaseStorage.instance.ref().child(file!.name);
+
+    //Setup the datatype
+    final metadata = SettableMetadata(
+      contentType: 'image/jpeg',
+      customMetadata: {'picked-file-path': file!.name},
+    );
+
+    try {
+      // Upload the file
+      await storageReference.putFile(File(file!.path), metadata).then((p0) => _openAlertDialog(context));
+
+    } catch (e) {
+      //TODO: display error message to notify the user
+      print(e); // Handle errors
     }
   }
 
