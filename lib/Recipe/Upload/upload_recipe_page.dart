@@ -2,6 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
+
+import '../../global_state.dart';
 
 class UploadRecipePage extends StatefulWidget {
   const UploadRecipePage({super.key});
@@ -11,8 +15,9 @@ class UploadRecipePage extends StatefulWidget {
 }
 
 class _UploadRecipePageState extends State<UploadRecipePage> {
+  DatabaseReference ref = FirebaseDatabase.instance.ref("recipes/");
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final TextEditingController _titleController = TextEditingController();
   // This will hold the selected image
   XFile? _image;
 
@@ -163,15 +168,37 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
     return instructionTextFieldList;
   }
 
-  void _onUploadPressed(){
+  void _onUploadPressed() async {
     //TODO: call uploadRecipe API, save input data to database
     if(_formKey.currentState?.validate()??false) {
-      _openAlertDialog(context);
+      List<String> ingredients = [];
+      List<String> instructions = [];
+      for(int i=0; i<_ingredientsCount; i++){
+        ingredients.add(_ingredientsController[i].text+" "+_ingredientsQuantityController[i].text);
+      }
+      for(int i=0; i<_instructionsCount; i++){
+        instructions.add(_instructionsController[i].text);
+      }
+
+      await ref.push().set({
+        "creator": context.read<GlobalState>().getUserId,
+        "image": "", //upload the image to storage, only store image name in database
+        "ingredient": ingredients,
+        "instruction": instructions,
+        "rating": 0,
+        "rating-count": 0,
+        "title": _titleController.text
+      }).then((value){
+        _openAlertDialog(context);
+      }).catchError((error){
+        //TODO: display error message to notify the user
+        print(error);
+      });
+
     }
   }
 
   void _openAlertDialog(BuildContext context){
-    //TODO: save the recipe data to database
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -218,6 +245,19 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
                   key: const Key('SelectImage'),
                   onPressed: _pickImage,
                   child: const Text('Select Image'),
+                ),
+                const Text('Title:', style: TextStyle(fontSize: 20),),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10.0),
+                  child: TextFormField(
+                    controller: _titleController,
+                    validator: (newValue){
+                      if(newValue == null || newValue.isEmpty) {
+                        return 'Title can not be blank.';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 const Text('Ingredients:', style: TextStyle(fontSize: 20),),
                 SizedBox(
