@@ -5,6 +5,7 @@ class GlobalState with ChangeNotifier {
   bool _isLoginStatus;
   CameraController? _cameraController;
   String? _userId;
+  List<dynamic>? _saveList;
 
   GlobalState(this._isLoginStatus);
 
@@ -15,6 +16,14 @@ class GlobalState with ChangeNotifier {
   void setLoginStatus(bool status){
     _isLoginStatus = status;
     notifyListeners();
+  }
+
+  List<dynamic>? getSaveList(){
+    return _saveList??[];
+  }
+
+  void setSaveList(List<dynamic> ls){
+    _saveList = ls;
   }
 
   String? getUserId(){
