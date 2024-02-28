@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +26,6 @@ class _LogInPageState extends State<LogInPage> {
       final snapshot = await ref.child('users/').get();
       if (snapshot.exists) {
         String dataString = jsonEncode(snapshot.value);
-        // print("Data String: $dataString");
         Map dataMap = jsonDecode(dataString);
         bool hasUser = _containsUser(dataMap, _userNameController.text, int.parse(_passwordController.text));
         if(hasUser){
@@ -52,6 +50,7 @@ class _LogInPageState extends State<LogInPage> {
       var info = user.value;
       if (info['name'] == name && info['password'] == password) {
         context.read<GlobalState>().setUserId(id);
+        context.read<GlobalState>().setSaveList(info['favorite']);
         return true; // Match found
       }
     }
