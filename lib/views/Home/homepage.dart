@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'homepage_bottom_action_bar.dart';
 import 'homepage_carousel_with_indicator.dart';
-import '../global_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

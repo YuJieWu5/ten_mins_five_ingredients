@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ten_mins_five_ingredients/Recipe/Upload/upload_recipe_page.dart';
+import 'package:ten_mins_five_ingredients/views/Recipe/Upload/upload_recipe_page.dart';
 
 main() {
   testWidgets('Test Upload Recipe if valid case', (

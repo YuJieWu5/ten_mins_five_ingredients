@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ten_mins_five_ingredients/Recipe/Ingredient/ingredients_list.dart';
+import 'package:ten_mins_five_ingredients/views/Recipe/Ingredient/ingredients_list.dart';
 
 void main() {
   testWidgets('Ingredient_list test', (WidgetTester tester) async {

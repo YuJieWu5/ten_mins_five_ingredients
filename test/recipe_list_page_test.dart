@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ten_mins_five_ingredients/Recipe/RecipeList/recipe_list_page.dart';
-import 'package:ten_mins_five_ingredients/Home/recipe_detail.dart';
+import 'package:ten_mins_five_ingredients/views/Recipe/RecipeList/recipe_list_page.dart';
+import 'package:ten_mins_five_ingredients/views/Home/recipe_detail.dart';
 
 main(){
   testWidgets("Test recipe list page ui and navigation", (WidgetTester tester) async {

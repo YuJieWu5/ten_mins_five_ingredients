@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ten_mins_five_ingredients/User/sign_up.dart';
+import 'package:ten_mins_five_ingredients/views/User/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ten_mins_five_ingredients/User/log_in.dart';
+import 'package:ten_mins_five_ingredients/views/User/log_in.dart';
 
 main(){
   testWidgets('Test Sign Up if confirm password incorrect', (WidgetTester tester)async {

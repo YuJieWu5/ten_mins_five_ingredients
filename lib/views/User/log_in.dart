@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import '../global_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class LogInPage extends StatefulWidget {

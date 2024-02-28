@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ten_mins_five_ingredients/global_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import '../Ingredient/ingredients_list.dart';
 import 'camera_widget.dart';
 import 'dart:convert';

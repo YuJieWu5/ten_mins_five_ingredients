@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ten_mins_five_ingredients/Home/homepage.dart';
+import 'package:ten_mins_five_ingredients/views/Home/homepage.dart';
 import 'recipe_rating_form.dart';
 
 class RecipeDetail extends StatefulWidget {
