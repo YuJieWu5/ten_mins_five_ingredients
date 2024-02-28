@@ -6,6 +6,7 @@ import '../../ingredients_list.dart';
 import 'camera_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class PhotoCapturePage extends StatelessWidget {
   const PhotoCapturePage({super.key});
@@ -62,11 +63,33 @@ class ActionBar extends StatelessWidget {
     }
   }
 
-  Future<void> sendImageToOpenAI(String base64Image) async {
+  Future getImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      String base64String = base64Encode(await pickedFile.readAsBytes());
+      var list = await sendImageToOpenAI(base64String);
+      print(list);
+    }
+  }
+
+  List<String> parseIngredients(String response) {
+    // This regex looks for patterns with numbers followed by '.', and captures the text following it until a newline or the end of the string
+    RegExp exp = RegExp(r'\d+\.\s*([^\n]+)');
+    // Use RegExp to find matches within the response
+    Iterable<RegExpMatch> matches = exp.allMatches(response);
+
+    // Map matches to their group(1) which is the actual text of the ingredient, trimming any leading or trailing whitespace
+    List<String> ingredients = matches.map((m) => m.group(1)!.trim()).toList();
+
+    return ingredients;
+  }
+
+  Future<List<String>> sendImageToOpenAI(String base64Image) async {
     // TODO: make API key a return value from server
     final headers = {
       "Content-Type": "application/json",
-      "Authorization": "Bearer your_api_key",
+      "Authorization": "Bearer ",
     };
 
     // Payload setup
@@ -78,7 +101,7 @@ class ActionBar extends StatelessWidget {
           "content": [
             {
               "type": "text",
-              "text": "What’s in this image?"
+              "text": "Please list all the food ingredients in this image, list them as bullet points with 1., 2. or 3."
             },
             {
               "type": "image_url",
@@ -103,13 +126,16 @@ class ActionBar extends StatelessWidget {
       if (response.statusCode == 200) {
         // Successfully received a response
         print("Response from OpenAI: ${response.body}");
+        return parseIngredients(response.body);
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.
         print("Failed to load data: ${response.body}");
+        return [];
       }
     } catch (e) {
       print("Error sending image to OpenAI: $e");
+      return [];
     }
   }
 
@@ -122,10 +148,8 @@ class ActionBar extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: const Text('Retake'),
-              onPressed: () {
-                // TODO: Retake the photo
-              },
+              child: const Text('Select form gallery'),
+              onPressed: getImage,
             ),
           ),
           const SizedBox(width: 16),
