@@ -8,7 +8,7 @@ void main() {
     tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
     tester.binding.window.devicePixelRatioTestValue = 1.0;
     await tester.pumpWidget(MaterialApp(
-      home: IngredientListPage(ingredients: [],),
+      home: IngredientListPage(),
     ));
 
     // Verify that our counter starts at 0.

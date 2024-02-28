@@ -1,8 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
-import '../Ingredient/ingredients_list.dart';
+import 'package:ten_mins_five_ingredients/core/models/ingredient_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/ingredients.dart';
 import 'camera_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -15,6 +17,9 @@ class PhotoCapturePage extends StatelessWidget {
       String imageBase64, BuildContext context) async {
     var list = await sendImageToOpenAI(imageBase64);
     print(list);
+    context.read<IngredientState>().ingredientList =
+        list.map((e) => Ingredient(name: e, emoji: "")).toList();
+    context.go("/ingredientList");
     context.read<GlobalState>().loading = false;
   }
 
@@ -96,8 +101,9 @@ class PhotoCapturePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            context.watch<GlobalState>().loading ? Spacer() : SizedBox.shrink(),
             context.watch<GlobalState>().loading
-                ? const Expanded(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator())
                 : AspectRatio(
                     aspectRatio: 3 / 4, // Square box
                     child: Container(
@@ -108,7 +114,12 @@ class PhotoCapturePage extends StatelessWidget {
                       child: const CameraWidget(),
                     ),
                   ),
-            ActionBar(getIngredientListFromOpenAI: getIngredientListFromOpenAI),
+            context.watch<GlobalState>().loading ? Spacer() : SizedBox.shrink(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ActionBar(
+                  getIngredientListFromOpenAI: getIngredientListFromOpenAI),
+            )
             // Confirm to use the photo
           ],
         ),
@@ -163,16 +174,14 @@ class ActionBar extends StatelessWidget {
           Expanded(
             child: ElevatedButton(
               child: const Text('Select form gallery'),
-              onPressed: () => getImage(context),
+              onPressed: () async => await getImage(context),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
               child: const Text('Confirm'),
-              onPressed: () async {
-
-              },
+              onPressed: () async => await takePicture(context),
             ),
           ),
         ],
