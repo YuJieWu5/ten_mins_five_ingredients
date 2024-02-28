@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ten_mins_five_ingredients/core/services/firebase_options.dart';
+import 'package:ten_mins_five_ingredients/views/Recipe/RecipeList/save_list.dart';
 import 'package:ten_mins_five_ingredients/views/User/log_in.dart';
 import 'package:ten_mins_five_ingredients/views/User/sign_up.dart';
 import 'package:ten_mins_five_ingredients/views/Home/homepage.dart';
@@ -61,6 +62,12 @@ final GoRouter _router = GoRouter(
           path: 'uploadRecipe',
           builder: (BuildContext context, GoRouterState state) {
             return const UploadRecipePage();
+          },
+        ),
+        GoRoute(
+          path: 'saveList',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SaveList();
           },
         ),
       ],
