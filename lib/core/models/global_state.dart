@@ -22,6 +22,10 @@ class GlobalState with ChangeNotifier {
 
   void setLoginStatus(bool status){
     _isLoginStatus = status;
+    if(!status){
+      setSaveList([]);
+      setUserId("");
+    }
     notifyListeners();
   }
 
@@ -31,6 +35,7 @@ class GlobalState with ChangeNotifier {
 
   void setSaveList(List<dynamic> ls){
     _saveList = ls;
+    notifyListeners();
   }
 
   String? getUserId(){
