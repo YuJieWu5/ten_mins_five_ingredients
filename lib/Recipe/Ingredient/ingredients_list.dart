@@ -3,20 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'ingredients.dart';
 
 class IngredientListPage extends StatefulWidget {
-  const IngredientListPage({super.key});
+  const IngredientListPage({required this.ingredients, super.key});
+  final List<Ingredient> ingredients;
 
   @override
   State<IngredientListPage> createState() => _IngredientListPageState();
 }
 
 class _IngredientListPageState extends State<IngredientListPage> {
-  // Example list of ingredients
-  final List<Ingredient> ingredients = [
-    Ingredient(name: 'Tomatoes', emoji: '🍅'),
-    Ingredient(name: 'Cheese', emoji: '🧀'),
-    Ingredient(name: 'Bread', emoji: '🍞'),
-    // TODO: Image Recognition API
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +23,9 @@ class _IngredientListPageState extends State<IngredientListPage> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: ingredients.length,
+              itemCount: widget.ingredients.length,
               itemBuilder: (context, index) {
-                final ingredient = ingredients[index];
+                final ingredient = widget.ingredients[index];
                 return CheckboxListTile(
                   title: Text('${ingredient.emoji} ${ingredient.name}'),
                   value: ingredient.isSelected,

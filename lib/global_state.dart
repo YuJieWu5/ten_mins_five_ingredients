@@ -6,6 +6,13 @@ class GlobalState with ChangeNotifier {
   CameraController? _cameraController;
   String? _userId;
   List<dynamic>? _saveList;
+  bool _loading = false;
+  bool get loading => _loading;
+
+  set loading(bool newValue) {
+    _loading = newValue;
+    notifyListeners();
+  }
 
   GlobalState(this._isLoginStatus);
 
