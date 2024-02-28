@@ -56,11 +56,12 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           var recipe = _recipeData[itemIndex];
           return GestureDetector(
             onTap: () {
+              //TODO: pass recipe data to recipe details page
               // Navigate to the recipe details page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const RecipeDetail()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => const RecipeDetail()),
+              // );
             },
             child: Column(
               children: [
