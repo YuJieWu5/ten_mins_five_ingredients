@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -22,27 +23,7 @@ class _SaveListState extends State<SaveList> {
   initState(){
     super.initState();
     saveListId = context.read<GlobalState>().getSaveList();
-    // readDatabase();
   }
-
-  // Future<void> readDatabase() async {
-  //   print("is loading");
-  //   final snapshot = await ref.child('recipes/').get();
-  //   if(snapshot.exists){
-  //     String dataString = jsonEncode(snapshot.value);
-  //     Map dataMap = jsonDecode(dataString);
-  //
-  //     for(var recipe in dataMap.entries){
-  //       if(saveListId!.contains(recipe.key)){
-  //         _recipesList.add(recipe.value);
-  //         print(recipe.key);
-  //       }
-  //     }
-  //     setState(() {});
-  //   }else{
-  //     print('No data available.');
-  //   }
-  // }
 
   Future<List<dynamic>> readDatabase() async {
     final snapshot = await ref.child('recipes/').get();
@@ -53,7 +34,19 @@ class _SaveListState extends State<SaveList> {
 
       for (var recipe in dataMap.entries) {
         if (saveListId!.contains(recipe.key)) {
-          _recipesList.add(recipe.value);
+          // _recipesList.add(recipe.value);
+          try {
+            // Upload the file
+            Reference storageReference = FirebaseStorage.instance.ref().child(recipe.value['image']);
+
+            // Optionally, if you want the file URL after the upload completes
+            final String downloadUrl = await storageReference.getDownloadURL();
+            recipe.value['image'] = downloadUrl;
+            _recipesList.add(recipe.value);
+            // print('Download URL: $downloadUrl');
+          } catch (e) {
+            print(e); // Handle errors
+          }
         }
       }
     } else {
@@ -86,12 +79,9 @@ class _SaveListState extends State<SaveList> {
             // List<dynamic> _recipesList = snapshot.data!;
             return ListView(
               children: _recipesList.map((item) => ListTile(
-                // leading: CircleAvatar(
-                //         child: Image.asset(
-                //               'assets/images/${item['image']}',
-                //               fit: BoxFit.contain,
-                //             ),
-                //     ),
+                leading: CircleAvatar(
+                        backgroundImage: NetworkImage(item['image'])
+                    ),
                 title: Text(item['title']),
                 subtitle: Text(item['rating'].toString()),
                 trailing: IconButton(
