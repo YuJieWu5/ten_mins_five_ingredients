@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 
 class RecipeRatingForm extends StatefulWidget {
   final Map recipe;
@@ -17,6 +19,9 @@ class _RecipeRatingFormState extends State<RecipeRatingForm> {
 
   void _onSubmitPressed() async {
     //TODO: send the rating score to database
+    if(!context.read<GlobalState>().getLoginStatus()){
+      return;
+    }
 
     final snapshot = await ref.child('recipes/').get();
     if(snapshot.exists){
