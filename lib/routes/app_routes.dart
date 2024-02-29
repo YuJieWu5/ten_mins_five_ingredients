@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +18,10 @@ import 'package:ten_mins_five_ingredients/views/Recipe/Upload/upload_recipe_page
 import 'package:ten_mins_five_ingredients/views/Recipe/RecipeList/save_list.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/RecipeList/create_list.dart';
 
+final ValueNotifier<int> navigationNotifier = ValueNotifier(0);
+
 final GoRouter router = GoRouter(
+  refreshListenable: navigationNotifier,
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -51,8 +56,8 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'recipeDetail',
           builder: (BuildContext context, GoRouterState state) {
-            final Recipe recipe = state.extra as Recipe;
-            return RecipeDetail(recipe: recipe);
+              final Recipe recipe = state.extra as Recipe;
+              return RecipeDetail(recipe: recipe);
           },
         ),
         GoRoute(
@@ -101,3 +106,7 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
+
+void triggerNavigationRefresh() {
+  navigationNotifier.value++;
+}
