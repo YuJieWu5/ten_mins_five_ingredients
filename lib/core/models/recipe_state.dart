@@ -47,8 +47,9 @@ class RecipeState with ChangeNotifier {
           description: descriptionMatch.group(1)!,
           ingredients: ingredients,
           steps: steps,
-          imageUrl: '',
-          score: 5.0
+          imageUrl: 'https://placehold.co/600x400/png',
+          rating: 5.0,
+          ratingCount: 10
         );
 
         recipes.add(recipe);

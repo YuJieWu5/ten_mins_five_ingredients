@@ -1,5 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/core/models/recipe_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 import 'package:ten_mins_five_ingredients/core/widgets/loading.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/Ingredient/get_recipe_list.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/Ingredient/ingredients_list.dart';
@@ -48,7 +51,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'recipeDetail',
           builder: (BuildContext context, GoRouterState state) {
-            final Map recipe = state.extra as Map;
+            final Recipe recipe = state.extra as Recipe;
             return RecipeDetail(recipe: recipe);
           },
         ),

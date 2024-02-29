@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 import 'package:ten_mins_five_ingredients/views/Home/homepage.dart';
 import 'recipe_rating_form.dart';
 
 class RecipeDetail extends StatefulWidget {
-  final Map recipe;
+  final Recipe recipe;
   const RecipeDetail({super.key, required this.recipe});
 
   @override
@@ -18,11 +19,11 @@ class _RecipeDetailState extends State<RecipeDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final Map recipe = widget.recipe;
+    final Recipe recipe = widget.recipe;
 
     return Scaffold(
       appBar: AppBar(
-          title: Text(recipe['title']),
+          title: Text(recipe.title),
           leading: GestureDetector(
               child: const Icon(Icons.arrow_back_ios),
               onTap: (){
@@ -55,7 +56,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
             children: [
               SizedBox(
                 height: 400.0,
-                child: Image.network(recipe['image'])
+                child: Image.network(recipe.imageUrl)
               ),
               Container(
                 margin: const EdgeInsets.only(top: 20.0),
@@ -83,11 +84,9 @@ class _RecipeDetailState extends State<RecipeDetail> {
           ),
           Center(
             child: SizedBox(height: 1000, width: 400, child: Column(
-              children: recipe[_display] != null
-                  ? (recipe[_display] as List<dynamic>).map<Widget>((item) => ListTile(
-                title: Text('$item'),
+              children: recipe.ingredients.map<Widget>((item) => ListTile(
+                title: Text(item),
               )).toList()
-                  : [const Text("No data")],
             )
             )
           ),

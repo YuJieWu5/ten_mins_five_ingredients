@@ -7,7 +7,8 @@ class Recipe {
   final List<String> ingredients;
   final List<String> steps;
   final String imageUrl;
-  final double score;
+  final double rating;
+  final int ratingCount;
 
   Recipe({
     required this.id,
@@ -16,7 +17,8 @@ class Recipe {
     required this.ingredients,
     required this.steps,
     required this.imageUrl,
-    required this.score
+    required this.rating,
+    required this.ratingCount
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
@@ -27,7 +29,8 @@ class Recipe {
       ingredients: List<String>.from(json['ingredients']),
       steps: List<String>.from(json['steps']),
       imageUrl: json['image'] as String,
-      score: json['score'] as double
+      rating: json['rating'] as double,
+      ratingCount: json['rating-count'] as int
     );
   }
 }
