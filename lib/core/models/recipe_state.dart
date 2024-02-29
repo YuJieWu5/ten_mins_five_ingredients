@@ -12,8 +12,16 @@ import './global_state.dart';
 
 class RecipeState with ChangeNotifier {
 
+  List<Recipe> _recipeList = [];
+  List<Recipe> get recipeList => _recipeList;
+
+  set recipeList(List<Recipe> newRecipeList) {
+    _recipeList = newRecipeList;
+    notifyListeners();
+  }
+
   List<Recipe> parseRecipes(String response) {
-    List<String> recipeSections = response.split('\n=========\n');
+    List<String> recipeSections = response.split('=========\n');
     print(recipeSections);
     List<Recipe> recipes = [];
 
@@ -52,7 +60,8 @@ class RecipeState with ChangeNotifier {
   }
 
 
-  Future<List<String>> getRecipesFromOpenAI(List<Ingredient> ingredients) async {
+  Future getRecipesFromOpenAI(List<Ingredient> ingredients) async {
+    router.push('/loading');
     // TODO: make API key a return value from server
     final headers = {
       "Content-Type": "application/json",
@@ -71,7 +80,7 @@ class RecipeState with ChangeNotifier {
               "type": "text",
               "text":
               """Given the ingredients: ${ingredients.map((e) => e.name).join(",")}, choose at most 5 of them and generate 3 detailed recipes that include the following information for each recipe: 
-            Name each recipe with a separate line called "recipe1:", "recipe2:", "recipe3:"
+            Name each recipe with a separate line called "recipe1:", "recipe2:", "recipe3:", and separate them by a line "========="
             1. A recipe title, called "title"
             2. A short description, called "description"
             3. A formatted list of ingredients used (formatted as: "1. eggs, 2. flour, 3. sugar."), called "ingredients"
@@ -95,18 +104,15 @@ class RecipeState with ChangeNotifier {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print("Response from OpenAI: ${jsonResponse['choices']}");
         String assistantMessage =
         jsonResponse['choices'][0]['message']['content'];
-        parseRecipes(assistantMessage);
-        return [];
+        recipeList = parseRecipes(assistantMessage);
+        router.push('/getRecipeList');
       } else {
         print("Failed to load data: ${response.body}");
-        return [];
       }
     } catch (e) {
       print("Error sending image to OpenAI: $e");
-      return [];
     }
   }
 }

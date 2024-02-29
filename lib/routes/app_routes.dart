@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:ten_mins_five_ingredients/core/widgets/loading.dart';
+import 'package:ten_mins_five_ingredients/views/Recipe/Ingredient/get_recipe_list.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/Ingredient/ingredients_list.dart';
 import 'package:ten_mins_five_ingredients/views/User/log_in.dart';
 import 'package:ten_mins_five_ingredients/views/User/sign_up.dart';
@@ -85,6 +86,12 @@ final GoRouter router = GoRouter(
           path: 'loading',
           builder: (BuildContext context, GoRouterState state) {
             return LoadingWidget();
+          },
+        ),
+        GoRoute(
+          path: 'getRecipeList',
+          builder: (BuildContext context, GoRouterState state) {
+            return GetRecipeList();
           },
         ),
       ],
