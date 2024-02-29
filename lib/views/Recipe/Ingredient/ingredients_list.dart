@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ten_mins_five_ingredients/core/models/ingredient_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/recipe_state.dart';
 
 class IngredientListPage extends StatefulWidget {
   const IngredientListPage({super.key});
@@ -46,8 +47,9 @@ class _IngredientListPageState extends State<IngredientListPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    GoRouter.of(context).push('/recipeList');
+                  onPressed: () async {
+                    await context.read<RecipeState>().getRecipesFromOpenAI(ingredientList);
+                    // GoRouter.of(context).push('/recipeList');
                   },
                   child: const Text('Show me the recipes!'),
                 ),
