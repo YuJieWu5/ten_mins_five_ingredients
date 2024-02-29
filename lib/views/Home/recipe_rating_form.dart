@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class RecipeRatingForm extends StatefulWidget {
-  const RecipeRatingForm({super.key});
+  final Map recipe;
+  const RecipeRatingForm({super.key, required this.recipe});
 
   @override
   State<RecipeRatingForm> createState() => _RecipeRatingFormState();
@@ -9,6 +12,54 @@ class RecipeRatingForm extends StatefulWidget {
 
 class _RecipeRatingFormState extends State<RecipeRatingForm> {
   int _rating = 0;
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+
+  void _onSubmitPressed() async {
+    //TODO: send the rating score to database
+
+    final snapshot = await ref.child('recipes/').get();
+    if(snapshot.exists){
+      String dataString = jsonEncode(snapshot.value);
+      Map dataMap = jsonDecode(dataString);
+      String recipeId = _findRecipe(dataMap, widget.recipe['title']);
+      ref = FirebaseDatabase.instance.ref("recipes/$recipeId");
+
+      //calculate new rating count and rating
+      int ratingCount = widget.recipe['rating-count']+1;
+      double rate =  ((widget.recipe['rating']*widget.recipe['rating-count'])+_rating)/ratingCount;
+      print(ratingCount.toString()+" "+ rate.toString());
+
+      //update rating and rating-count
+      await ref.update({
+        "rating": double.parse(rate.toStringAsFixed(1)),
+        "rating-count": ratingCount,
+      }).then((value) => Navigator.pop(context))
+      .catchError((error){
+        print(error);
+      });
+    }
+
+    // print("Rating:$_rating");
+
+  }
+
+  String _findRecipe(Map data, String title) {
+    // Iterate through all values in the data map
+    for (var user in data.entries) {
+      // Check if any user matches the name and password
+      var id = user.key;
+      var info = user.value;
+      if (info['title'] == title) {
+        print(id);
+        return id;
+        // context.read<GlobalState>().setUserId(id);
+        // context.read<GlobalState>().setSaveList(info['favorite']);
+      }
+    }
+    return ""; // No match found
+  }
+
   List<Widget> _buildHearts(int score) {
     List<Widget> hearts = [];
     for (int i = 0; i < score; i++) {
@@ -38,11 +89,6 @@ class _RecipeRatingFormState extends State<RecipeRatingForm> {
     return hearts;
   }
 
-  void _onSubmitPressed(){
-    //TODO: send the rating score to database
-    print("Rating:$_rating");
-    Navigator.pop(context);
-  }
 
   @override
   Widget build(BuildContext context) {

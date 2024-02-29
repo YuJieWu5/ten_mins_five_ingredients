@@ -8,7 +8,6 @@ import 'recipe_rating_form.dart';
 class RecipeDetail extends StatefulWidget {
   final Map recipe;
   const RecipeDetail({super.key, required this.recipe});
-  // const RecipeDetail({super.key});
 
   @override
   State<RecipeDetail> createState() => _RecipeDetailState();
@@ -19,7 +18,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
 
   @override
   Widget build(BuildContext context) {
-    Map recipe = widget.recipe;
+    final Map recipe = widget.recipe;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +42,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
-                      return const RecipeRatingForm();
+                      return RecipeRatingForm(recipe: recipe);
                     },
                   );
                 },
