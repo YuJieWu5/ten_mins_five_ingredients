@@ -19,14 +19,8 @@ class CameraWidget extends StatefulWidget {
   _CameraWidgetState createState() => _CameraWidgetState();
 }
 
-class _CameraWidgetState extends State<CameraWidget> {
+class _CameraWidgetState extends State<CameraWidget> with WidgetsBindingObserver {
   CameraController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    requestCameraPermission();
-  }
 
   Future<void> requestCameraPermission() async {
     var status = await Permission.camera.status;
@@ -43,28 +37,49 @@ class _CameraWidgetState extends State<CameraWidget> {
       print("No cameras are available");
       return;
     }
+
     final frontCamera = cameras.firstWhere(
           (camera) => camera.lensDirection == CameraLensDirection.back,
       orElse: () => cameras.first,
     );
 
+    controller?.dispose(); // Dispose the existing controller if any
+
     controller = CameraController(frontCamera, ResolutionPreset.high);
-    controller!.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
+    try {
+      await controller!.initialize();
+      if (!mounted) return;
       final globalState = context.read<GlobalState>();
       globalState.setCameraController(controller);
       setState(() {});
-    }).catchError((error) {
-      print("Error initializing camera: $error");
-    });
+    } catch (e) {
+      print("Error initializing camera: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    requestCameraPermission();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     controller?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // Reinitialize the camera
+      if (controller != null) {
+        initializeCamera();
+      }
+    }
   }
 
   @override
