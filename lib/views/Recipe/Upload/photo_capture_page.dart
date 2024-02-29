@@ -1,93 +1,15 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import 'package:ten_mins_five_ingredients/core/models/ingredient_state.dart';
 import 'package:ten_mins_five_ingredients/core/models/ingredients.dart';
 import 'camera_widget.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class PhotoCapturePage extends StatelessWidget {
   const PhotoCapturePage({super.key});
-
-  Future getIngredientListFromOpenAI(
-      String imageBase64, BuildContext context) async {
-    var list = await sendImageToOpenAI(imageBase64);
-    print(list);
-    context.read<IngredientState>().ingredientList =
-        list.map((e) => Ingredient(name: e, emoji: "")).toList();
-    context.go("/ingredientList");
-    context.read<GlobalState>().loading = false;
-  }
-
-  List<String> parseIngredients(String response) {
-    // This regex looks for patterns with numbers followed by '.', captures the text that follows until the line break
-    RegExp exp = RegExp(r'\d+\.\s*([^\n]+)');
-    Iterable<RegExpMatch> matches = exp.allMatches(response);
-
-    // Map matches to their group(1) which captures the ingredient's name, trimming any leading or trailing whitespace
-    List<String> ingredients = matches.map((m) => m.group(1)!.trim()).toList();
-
-    return ingredients;
-  }
-
-  Future<List<String>> sendImageToOpenAI(String base64Image) async {
-    // TODO: make API key a return value from server
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization":
-          "Bearer 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",
-    };
-
-    // Payload setup
-    final payload = jsonEncode({
-      "model": "gpt-4-vision-preview",
-      "messages": [
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "text",
-              "text":
-                  "Please list all the food ingredients in this image, I only need the name, list them as bullet points with 1., 2. or 3."
-            },
-            {
-              "type": "image_url",
-              "image_url": {
-                "url": "data:image/jpeg;base64,$base64Image",
-              }
-            }
-          ]
-        }
-      ],
-      "max_tokens": 300,
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse("https://api.openai.com/v1/chat/completions"),
-        headers: headers,
-        body: payload,
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        String assistantMessage =
-            jsonResponse['choices'][0]['message']['content'];
-        print("Response from OpenAI: ${assistantMessage}");
-        return parseIngredients(assistantMessage);
-      } else {
-        print("Failed to load data: ${response.body}");
-        return [];
-      }
-    } catch (e) {
-      print("Error sending image to OpenAI: $e");
-      return [];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +23,7 @@ class PhotoCapturePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            context.watch<GlobalState>().loading ? Spacer() : SizedBox.shrink(),
-            context.watch<GlobalState>().loading
-                ? Center(child: CircularProgressIndicator())
-                : AspectRatio(
+            AspectRatio(
                     aspectRatio: 3 / 4, // Square box
                     child: Container(
                       margin: const EdgeInsets.all(20),
@@ -114,11 +33,9 @@ class PhotoCapturePage extends StatelessWidget {
                       child: const CameraWidget(),
                     ),
                   ),
-            context.watch<GlobalState>().loading ? Spacer() : SizedBox.shrink(),
             Align(
               alignment: Alignment.bottomCenter,
-              child: ActionBar(
-                  getIngredientListFromOpenAI: getIngredientListFromOpenAI),
+              child: ActionBar(),
             )
             // Confirm to use the photo
           ],
@@ -129,9 +46,7 @@ class PhotoCapturePage extends StatelessWidget {
 }
 
 class ActionBar extends StatelessWidget {
-  const ActionBar({required this.getIngredientListFromOpenAI, super.key});
-
-  final Function(String, BuildContext) getIngredientListFromOpenAI;
+  const ActionBar({super.key});
 
   Future takePicture(BuildContext context) async {
     CameraController controller =
@@ -144,9 +59,8 @@ class ActionBar extends StatelessWidget {
     }
     try {
       XFile file = await controller!.takePicture();
-      context.read<GlobalState>().loading = true;
       String base64String = base64Encode(await file.readAsBytes());
-      getIngredientListFromOpenAI(base64String, context);
+      context.read<IngredientState>().getIngredientListFromOpenAI(base64String);
     } catch (e) {
       print(e);
       return null;
@@ -158,9 +72,8 @@ class ActionBar extends StatelessWidget {
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      context.read<GlobalState>().loading = true;
       String base64String = base64Encode(await pickedFile.readAsBytes());
-      getIngredientListFromOpenAI(base64String, context);
+      context.read<IngredientState>().getIngredientListFromOpenAI(base64String);
     }
   }
 
