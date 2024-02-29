@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
+import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 
 class SaveList extends StatefulWidget {
   const SaveList({super.key});
@@ -87,7 +88,7 @@ class _SaveListState extends State<SaveList> {
                 trailing: IconButton(
                   key: Key(item['title']),
                   icon: const Icon(Icons.chevron_right),
-                  onPressed: () => GoRouter.of(context).push('/recipeDetail', extra: item),
+                  onPressed: () => GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(item)),
                   // onPressed: () => GoRouter.of(context).push('/recipeDetail'),
                 ),
                 isThreeLine: true,

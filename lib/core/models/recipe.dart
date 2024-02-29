@@ -20,12 +20,15 @@ class Recipe {
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
+    String id = json['id'] != null ? json['id'] as String : DateTime.now().millisecondsSinceEpoch.toString();
+    String description = json['description'] != null ? json['description'] as String : "empty description";
+
     return Recipe(
-      id: json['id'] as String,
-      title: json['name'] as String,
-      description: json['description'] as String,
-      ingredients: List<String>.from(json['ingredients']),
-      steps: List<String>.from(json['steps']),
+      id: id,
+      title: json['title'] as String,
+      description: description,
+      ingredients: List<String>.from(json['ingredient']),
+      steps: List<String>.from(json['instruction']),
       imageUrl: json['image'] as String,
       rating: (json['rating'] as num).toDouble(), 
       ratingCount: json['rating-count'] as int,
