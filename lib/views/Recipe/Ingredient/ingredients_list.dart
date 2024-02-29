@@ -15,15 +15,16 @@ class _IngredientListPageState extends State<IngredientListPage> {
   @override
   Widget build(BuildContext context) {
     var ingredientList = context.watch<IngredientState>().ingredientList;
-    return PopScope(
-        canPop: false,
-        onPopInvoked: (bool _) {
-          context.go('/getRecipe');
-        },
-        child: Scaffold(
+    return Scaffold(
           appBar: AppBar(
             title: const Text('Ingredient List'),
             centerTitle: true,
+            leading: GestureDetector(
+                child: Icon(Icons.arrow_back_ios),
+                onTap: (){
+                  context.go("/getRecipe");
+                }
+            ),
           ),
           body: Column(
             children: [
@@ -47,16 +48,14 @@ class _IngredientListPageState extends State<IngredientListPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  onPressed: () async {
-                    await context.read<RecipeState>().getRecipesFromOpenAI(ingredientList);
-                    // GoRouter.of(context).push('/recipeList');
+                  onPressed: () {
+                    context.read<RecipeState>().getRecipesFromOpenAI(ingredientList);
                   },
                   child: const Text('Show me the recipes!'),
                 ),
               ),
             ],
           ),
-        )
     );
   }
 }
