@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class Recipe {
   final String id;
   final String title;
@@ -18,19 +16,32 @@ class Recipe {
     required this.steps,
     required this.imageUrl,
     required this.rating,
-    required this.ratingCount
+    required this.ratingCount,
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: json['id'] as String,
       title: json['name'] as String,
       description: json['description'] as String,
       ingredients: List<String>.from(json['ingredients']),
       steps: List<String>.from(json['steps']),
       imageUrl: json['image'] as String,
-      rating: json['rating'] as double,
-      ratingCount: json['rating-count'] as int
+      rating: (json['rating'] as num).toDouble(), 
+      ratingCount: json['rating-count'] as int,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': title,
+      'description': description,
+      'ingredients': ingredients,
+      'steps': steps,
+      'image': imageUrl,
+      'rating': rating,
+      'ratingCount': ratingCount,
+    };
   }
 }

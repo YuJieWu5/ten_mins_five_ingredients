@@ -20,6 +20,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
   @override
   Widget build(BuildContext context) {
     final Recipe recipe = widget.recipe;
+    final List<String> list = _display == "ingredient" ? recipe.ingredients : recipe.steps;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +85,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
           ),
           Center(
             child: SizedBox(height: 1000, width: 400, child: Column(
-              children: recipe.ingredients.map<Widget>((item) => ListTile(
+              children: list.map<Widget>((item) => ListTile(
                 title: Text(item),
               )).toList()
             )
