@@ -33,7 +33,7 @@ class _RecipeRatingFormState extends State<RecipeRatingForm> {
       //calculate new rating count and rating
       int ratingCount = widget.recipe.ratingCount + 1;
       double rate =
-          ((widget.recipe.ratingCount * widget.recipe.ratingCount) + _rating) /
+          ((widget.recipe.rating * widget.recipe.ratingCount) + _rating) /
               ratingCount;
       print(ratingCount.toString() + " " + rate.toString());
 
