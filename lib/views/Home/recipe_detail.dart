@@ -29,9 +29,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
           leading: GestureDetector(
               child: const Icon(Icons.arrow_back_ios),
               onTap: (){
-                //refresh the navigation stack
-                // triggerNavigationRefresh();
-                GoRouter.of(context).pop();
+                GoRouter.of(context).pop(true);
               }
           ),
           actions: [

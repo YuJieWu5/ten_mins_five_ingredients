@@ -26,12 +26,19 @@ class _CreateListState extends State<CreateList> {
     _userId = context.read<GlobalState>().getUserId();
   }
 
+  void openRecipeDetail(Map<String, dynamic> recipe, BuildContext context) async {
+      final reLoadPage = await GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(recipe));
+      if (reLoadPage as bool) {
+          setState(() {});
+      }
+  }
+
   Future<List<dynamic>> readDatabase() async {
     final snapshot = await ref.child('recipes/').get();
     if (snapshot.exists) {
       String dataString = jsonEncode(snapshot.value);
       Map dataMap = jsonDecode(dataString);
-
+      _recipesList.clear();
       for (var recipe in dataMap.entries) {
         if(recipe.value['creator']==_userId) {
           // _recipesList.add(recipe.value);
@@ -87,7 +94,7 @@ class _CreateListState extends State<CreateList> {
                 trailing: IconButton(
                   key: Key(item['title']),
                   icon: const Icon(Icons.chevron_right),
-                  onPressed: () => GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(item)),
+                  onPressed: () => openRecipeDetail(item, context),
                   // onPressed: () => GoRouter.of(context).push('/recipeDetail'),
                 ),
                 isThreeLine: true,

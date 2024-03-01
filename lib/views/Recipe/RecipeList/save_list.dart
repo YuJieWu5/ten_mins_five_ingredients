@@ -26,9 +26,16 @@ class _SaveListState extends State<SaveList> {
     saveListId = context.read<GlobalState>().getSaveList();
   }
 
+  void openRecipeDetail(Map<String, dynamic> recipe, BuildContext context) async {
+      final reLoadPage = await GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(recipe));
+      if (reLoadPage as bool) {
+          setState(() {});
+      }
+  }
+
   Future<List<dynamic>> readDatabase() async {
     final snapshot = await ref.child('recipes/').get();
-    // recipesList = [];
+    _recipesList.clear();
     if (snapshot.exists) {
       String dataString = jsonEncode(snapshot.value);
       Map dataMap = jsonDecode(dataString);
@@ -88,8 +95,7 @@ class _SaveListState extends State<SaveList> {
                 trailing: IconButton(
                   key: Key(item['title']),
                   icon: const Icon(Icons.chevron_right),
-                  onPressed: () => GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(item)),
-                  // onPressed: () => GoRouter.of(context).push('/recipeDetail'),
+                  onPressed: () => openRecipeDetail(item, context),
                 ),
                 isThreeLine: true,
               )).toList(),
