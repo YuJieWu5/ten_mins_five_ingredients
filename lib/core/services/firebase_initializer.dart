@@ -5,7 +5,8 @@ import 'firebase_options.dart';
 import '../../main.dart';
 
 class FirebaseInitializer extends StatelessWidget {
-  const FirebaseInitializer({super.key});
+  const FirebaseInitializer({required this.widget, super.key});
+  final Widget widget;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class FirebaseInitializer extends StatelessWidget {
         builder: (context, snapshot){
           if(snapshot.hasData){
             // return const Text('Yay you\'re connected to firebase');
-            return const MyApp();
+            return widget;
           }
           return const CircularProgressIndicator();
         }

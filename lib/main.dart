@@ -8,7 +8,7 @@ import 'routes/app_routes.dart';
 
 void main() {
   // runApp(const MyApp());
-  runApp(const FirebaseInitializer());
+  runApp(const FirebaseInitializer(widget: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
