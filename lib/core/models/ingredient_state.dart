@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,6 @@ import 'dart:convert';
 import '../../routes/app_routes.dart';
 import './ingredients.dart';
 import './global_state.dart';
-
 
 class IngredientState with ChangeNotifier {
   List<Ingredient> _ingredientList = [];
@@ -19,13 +19,11 @@ class IngredientState with ChangeNotifier {
     notifyListeners();
   }
 
-  Future getIngredientListFromOpenAI(
-      String imageBase64) async {
+  Future getIngredientListFromOpenAI(String imageBase64) async {
     router.push('/loading');
     var list = await sendImageToOpenAI(imageBase64);
     print(list);
-    ingredientList =
-        list.map((e) => Ingredient(name: e, emoji: "")).toList();
+    ingredientList = list.map((e) => Ingredient(name: e, emoji: "")).toList();
     router.push("/ingredientList");
   }
 
@@ -41,57 +39,62 @@ class IngredientState with ChangeNotifier {
   }
 
   Future<List<String>> sendImageToOpenAI(String base64Image) async {
-    // TODO: make API key a return value from server
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization":
-      "Bearer ",
-    };
+    final ref = FirebaseDatabase.instance.ref();
+    final keyObj = await ref.child('openai-key').get();
+    if (keyObj.exists) {
+      var apiKey = keyObj.value as String;
+      final headers = {
+        "Content-Type": "application/json",
+        "Authorization":
+            "Bearer $apiKey",
+      };
 
-    // Payload setup
-    final payload = jsonEncode({
-      "model": "gpt-4-vision-preview",
-      "messages": [
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "text",
-              "text":
-              "Please list all the food ingredients in this image, I only need the name, list them as bullet points with 1., 2. or 3."
-            },
-            {
-              "type": "image_url",
-              "image_url": {
-                "url": "data:image/jpeg;base64,$base64Image",
+      // Payload setup
+      final payload = jsonEncode({
+        "model": "gpt-4-vision-preview",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text":
+                    "Please list all the food ingredients in this image, I only need the name, list them as bullet points with 1., 2. or 3."
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,$base64Image",
+                }
               }
-            }
-          ]
+            ]
+          }
+        ],
+        "max_tokens": 300,
+      });
+
+      try {
+        final response = await http.post(
+          Uri.parse("https://api.openai.com/v1/chat/completions"),
+          headers: headers,
+          body: payload,
+        );
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+          String assistantMessage =
+              jsonResponse['choices'][0]['message']['content'];
+          print("Response from OpenAI: ${assistantMessage}");
+          return parseIngredients(assistantMessage);
+        } else {
+          print("Failed to load data: ${response.body}");
+          return [];
         }
-      ],
-      "max_tokens": 300,
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse("https://api.openai.com/v1/chat/completions"),
-        headers: headers,
-        body: payload,
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        String assistantMessage =
-        jsonResponse['choices'][0]['message']['content'];
-        print("Response from OpenAI: ${assistantMessage}");
-        return parseIngredients(assistantMessage);
-      } else {
-        print("Failed to load data: ${response.body}");
+      } catch (e) {
+        print("Error sending image to OpenAI: $e");
         return [];
       }
-    } catch (e) {
-      print("Error sending image to OpenAI: $e");
-      return [];
     }
+    return [];
   }
 }

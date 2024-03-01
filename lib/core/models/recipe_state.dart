@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -9,9 +10,7 @@ import '../../routes/app_routes.dart';
 import './ingredients.dart';
 import './global_state.dart';
 
-
 class RecipeState with ChangeNotifier {
-
   List<Recipe> _recipeList = [];
   List<Recipe> get recipeList => _recipeList;
 
@@ -31,26 +30,30 @@ class RecipeState with ChangeNotifier {
       final ingredientsMatch = RegExp(r'ingredients: (.*)').firstMatch(section);
       final stepsMatch = RegExp(r'steps: (.*)').firstMatch(section);
 
-      if (titleMatch != null && descriptionMatch != null && ingredientsMatch != null && stepsMatch != null) {
-        List<String> ingredients = ingredientsMatch.group(1)!
+      if (titleMatch != null &&
+          descriptionMatch != null &&
+          ingredientsMatch != null &&
+          stepsMatch != null) {
+        List<String> ingredients = ingredientsMatch
+            .group(1)!
             .split(', ')
             .where((i) => i.isNotEmpty)
             .toList();
-        List<String> steps = stepsMatch.group(1)!
+        List<String> steps = stepsMatch
+            .group(1)!
             .split('. ')
             .where((i) => i.isNotEmpty)
             .toList();
 
         Recipe recipe = Recipe(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          title: titleMatch.group(1)!,
-          description: descriptionMatch.group(1)!,
-          ingredients: ingredients,
-          steps: steps,
-          imageUrl: 'https://placehold.co/600x400/png',
-          rating: 5.0,
-          ratingCount: 10
-        );
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            title: titleMatch.group(1)!,
+            description: descriptionMatch.group(1)!,
+            ingredients: ingredients,
+            steps: steps,
+            imageUrl: 'https://placehold.co/600x400/png',
+            rating: 5.0,
+            ratingCount: 10);
 
         recipes.add(recipe);
       }
@@ -60,27 +63,31 @@ class RecipeState with ChangeNotifier {
     return recipes;
   }
 
-
   Future getRecipesFromOpenAI(List<Ingredient> ingredients) async {
     router.push('/loading');
-    // TODO: make API key a return value from server
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization":
-      "Bearer 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",
-    };
+    final ref = FirebaseDatabase.instance.ref();
+    final keyObj = await ref.child('openai-key').get();
+    if (keyObj.exists) {
+      var apiKey = jsonEncode(keyObj.value);
 
-    // Payload setup
-    final payload = jsonEncode({
-      "model": "gpt-4-turbo-preview",
-      "messages": [
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "text",
-              "text":
-              """Given the ingredients: ${ingredients.map((e) => e.name).join(",")}, choose at most 5 of them and generate 3 detailed recipes that include the following information for each recipe: 
+      // TODO: make API key a return value from server
+      final headers = {
+        "Content-Type": "application/json",
+        "Authorization":
+            "Bearer $apiKey",
+      };
+
+      // Payload setup
+      final payload = jsonEncode({
+        "model": "gpt-4-turbo-preview",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text":
+                    """Given the ingredients: ${ingredients.map((e) => e.name).join(",")}, choose at most 5 of them and generate 3 detailed recipes that include the following information for each recipe: 
             Name each recipe with a separate line called "recipe1:", "recipe2:", "recipe3:", and separate them by a line "========="
             1. A recipe title, called "title"
             2. A short description, called "description"
@@ -89,31 +96,32 @@ class RecipeState with ChangeNotifier {
             Please use plain text, don't use bullet points, don't use any bold or other rich text decorators.
             Please ensure that the ingredients and steps are clearly numbered and separated to allow for easy parsing in the application.
             """
-            }
-          ]
+              }
+            ]
+          }
+        ],
+        "max_tokens": 4096,
+      });
+
+      try {
+        final response = await http.post(
+          Uri.parse("https://api.openai.com/v1/chat/completions"),
+          headers: headers,
+          body: payload,
+        );
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+          String assistantMessage =
+              jsonResponse['choices'][0]['message']['content'];
+          recipeList = parseRecipes(assistantMessage);
+          router.push('/getRecipeList');
+        } else {
+          print("Failed to load data: ${response.body}");
         }
-      ],
-      "max_tokens": 4096,
-    });
-
-    try {
-      final response = await http.post(
-        Uri.parse("https://api.openai.com/v1/chat/completions"),
-        headers: headers,
-        body: payload,
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        String assistantMessage =
-        jsonResponse['choices'][0]['message']['content'];
-        recipeList = parseRecipes(assistantMessage);
-        router.push('/getRecipeList');
-      } else {
-        print("Failed to load data: ${response.body}");
+      } catch (e) {
+        print("Error sending image to OpenAI: $e");
       }
-    } catch (e) {
-      print("Error sending image to OpenAI: $e");
     }
   }
 }
