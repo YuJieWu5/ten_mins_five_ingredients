@@ -68,7 +68,7 @@ class RecipeState with ChangeNotifier {
     final ref = FirebaseDatabase.instance.ref();
     final keyObj = await ref.child('openai-key').get();
     if (keyObj.exists) {
-      var apiKey = jsonEncode(keyObj.value);
+      var apiKey = keyObj.value as String;
 
       // TODO: make API key a return value from server
       final headers = {
