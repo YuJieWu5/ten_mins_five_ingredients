@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 import 'package:ten_mins_five_ingredients/views/Home/homepage.dart';
 import 'recipe_rating_form.dart';
+import 'package:ten_mins_five_ingredients/routes/app_routes.dart';
 
 class RecipeDetail extends StatefulWidget {
   final Recipe recipe;
@@ -28,6 +29,8 @@ class _RecipeDetailState extends State<RecipeDetail> {
           leading: GestureDetector(
               child: const Icon(Icons.arrow_back_ios),
               onTap: (){
+                //refresh the navigation stack
+                // triggerNavigationRefresh();
                 GoRouter.of(context).pop();
               }
           ),
