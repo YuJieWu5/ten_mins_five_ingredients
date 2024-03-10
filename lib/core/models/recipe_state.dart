@@ -45,12 +45,19 @@ class RecipeState with ChangeNotifier {
             .where((i) => i.isNotEmpty)
             .toList();
 
+        List<String> combinedSteps = [];
+        for (int i = 0; i < steps.length; i += 2) {
+          if (i + 1 < steps.length) {
+            combinedSteps.add(steps[i] + '. ' + steps[i + 1]);
+          }
+        }
+
         Recipe recipe = Recipe(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             title: titleMatch.group(1)!,
             description: descriptionMatch.group(1)!,
             ingredients: ingredients,
-            steps: steps,
+            steps: combinedSteps,
             imageUrl: 'https://placehold.co/600x400/png',
             rating: 5.0,
             ratingCount: 10);
@@ -79,7 +86,7 @@ class RecipeState with ChangeNotifier {
 
       // Payload setup
       final payload = jsonEncode({
-        "model": "gpt-4-turbo-preview",
+        "model": "gpt-4-0125-preview",
         "messages": [
           {
             "role": "user",
