@@ -48,6 +48,8 @@ dependencies:
   firebase_auth: ^4.17.4
   firebase_database: ^10.4.6
   firebase_storage: ^11.6.6
+  firebase_storage_mocks: ^0.6.1
+  firebase_database_mocks: ^0.6.1
 
 dev_dependencies:
   flutter_test:

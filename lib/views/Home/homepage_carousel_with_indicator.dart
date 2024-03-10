@@ -4,9 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 
 import '../../core/models/recipe.dart';
-
 
 class CarouselWithIndicator extends StatefulWidget {
   const CarouselWithIndicator({super.key});
@@ -18,19 +19,26 @@ class CarouselWithIndicator extends StatefulWidget {
 class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
-  final ref = FirebaseDatabase.instance.ref();
   List<dynamic>? saveListId;
   List<Map<String, dynamic>> _recipesList = [];
   Future<List<dynamic>>? _futureRecipesList;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _futureRecipesList = readDatabase();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _futureRecipesList = readDatabase(context);
+        });
+      }
+    });
   }
 
-  Future<List<dynamic>> readDatabase() async {
-    final snapshot = await ref.child('recipes/').get();
+  Future<List<dynamic>> readDatabase(BuildContext context) async {
+    final database = context.read<GlobalState>().database;
+    final storage = context.read<GlobalState>().storage;
+    final snapshot = await database.ref().child('recipes/').get();
     _recipesList.clear();
     if (snapshot.exists) {
       String dataString = jsonEncode(snapshot.value);
@@ -38,20 +46,21 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
 
       for (var recipe in dataMap.entries) {
         // if (saveListId!.contains(recipe.key)) {
-          // _recipesList.add(recipe.value);
-          try {
-            // Upload the file
-            Reference storageReference = FirebaseStorage.instance.ref().child(recipe.value['image']);
+        // _recipesList.add(recipe.value);
+        try {
+          // Upload the file
+          Reference storageReference =
+              storage.ref().child(recipe.value['image']);
 
-            // Optionally, if you want the file URL after the upload completes
-            final String downloadUrl = await storageReference.getDownloadURL();
-            recipe.value['image'] = downloadUrl;
-            recipe.value['id'] = recipe.key;
-            _recipesList.add(recipe.value);
-            // print('Download URL: $downloadUrl');
-          } catch (e) {
-            print(e); // Handle errors
-          }
+          // Optionally, if you want the file URL after the upload completes
+          final String downloadUrl = await storageReference.getDownloadURL();
+          recipe.value['image'] = downloadUrl;
+          recipe.value['id'] = recipe.key;
+          _recipesList.add(recipe.value);
+          // print('Download URL: $downloadUrl');
+        } catch (e) {
+          print(e); // Handle errors
+        }
         // }
       }
       _recipesList.sort((a, b) => b['rating'].compareTo(a['rating']));
@@ -65,8 +74,10 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
     return _recipesList;
   }
 
-  void openRecipeDetail(Map<String, dynamic> recipe, BuildContext context) async {
-    final reLoadPage = await GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(recipe));
+  void openRecipeDetail(
+      Map<String, dynamic> recipe, BuildContext context) async {
+    final reLoadPage = await GoRouter.of(context)
+        .push('/recipeDetail', extra: Recipe.fromJson(recipe));
     if (reLoadPage as bool) {
       setState(() {});
     }
@@ -100,7 +111,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
               children: [
                 CarouselSlider.builder(
                   itemCount: recipes.length,
-                  itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+                  itemBuilder:
+                      (BuildContext context, int itemIndex, int pageViewIndex) {
                     var recipe = _recipesList[itemIndex];
                     return GestureDetector(
                       onTap: () {
@@ -159,7 +171,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                       child: Container(
                         width: 8.0,
                         height: 8.0,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 4.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _current == entry.key

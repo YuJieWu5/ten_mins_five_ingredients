@@ -1,4 +1,6 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class GlobalState with ChangeNotifier {
@@ -8,13 +10,15 @@ class GlobalState with ChangeNotifier {
   List<dynamic>? _saveList;
   bool _loading = false;
   bool get loading => _loading;
+  FirebaseStorage storage;
+  FirebaseDatabase database;
 
   set loading(bool newValue) {
     _loading = newValue;
     notifyListeners();
   }
 
-  GlobalState(this._isLoginStatus);
+  GlobalState(this._isLoginStatus, this.storage, this.database);
 
   bool getLoginStatus(){
     return _isLoginStatus;
