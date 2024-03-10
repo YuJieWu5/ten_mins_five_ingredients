@@ -1,3 +1,4 @@
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ void main() {
     };
 
     final globalState = GlobalState(
-        false, MockFirebaseStorage(), MockFirebaseDatabase.instance);
+        false, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth());
     final Recipe recipe = Recipe.fromJson(mock_recipe);
     await mockNetworkImages(() async => await tester.pumpWidget(MultiProvider(
             providers: [

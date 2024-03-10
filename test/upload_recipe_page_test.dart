@@ -1,3 +1,4 @@
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'package:ten_mins_five_ingredients/views/Recipe/Upload/upload_recipe_page
 main() {
   testWidgets('Test Upload Recipe if valid case', (WidgetTester tester) async {
     final globalState = GlobalState(
-        false, MockFirebaseStorage(), MockFirebaseDatabase.instance);
+        false, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth());
     await tester.pumpWidget(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => globalState),
     ], child: MaterialApp(home: UploadRecipePage())));
@@ -32,7 +33,7 @@ main() {
   testWidgets('Test Upload Recipe dynamic ingredient and instruction textfield',
       (WidgetTester tester) async {
     final globalState = GlobalState(
-        false, MockFirebaseStorage(), MockFirebaseDatabase.instance);
+        false, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth());
     await tester.pumpWidget(MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => globalState),
     ], child: MaterialApp(home: UploadRecipePage())));

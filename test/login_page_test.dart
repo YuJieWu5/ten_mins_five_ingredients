@@ -1,3 +1,4 @@
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,14 +24,15 @@ void main() {
       ],
     );
 
-    const fakeData = {
-      'users': {
-        'aaa': {'name': 'test', 'password': 123456, 'favorite': []}
-      }
-    };
-    MockFirebaseDatabase.instance.ref().set(fakeData);
+    final user = MockUser(
+          isAnonymous: false,
+          uid: 'someuid',
+          email: 'bob@somedomain.com',
+          displayName: 'Bob',
+        );
+    final auth = MockFirebaseAuth(mockUser: user);
     final globalState = GlobalState(
-        false, MockFirebaseStorage(), MockFirebaseDatabase.instance);
+        false, MockFirebaseStorage(), MockFirebaseDatabase.instance, auth);
     await tester.pumpWidget(MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => globalState),
@@ -39,19 +41,19 @@ void main() {
           routerConfig: _router,
         )));
 
-    expect(find.text('Create Account'), findsOneWidget);
+    expect(find.text("Don't have an account? Sign up."), findsOneWidget);
 
-    final usernameField = find.widgetWithText(TextFormField, 'Username');
+    final emailField = find.widgetWithText(TextFormField, 'Email');
     final passwordField = find.widgetWithText(TextFormField, 'Password');
-    expect(usernameField, findsOneWidget);
+    expect(emailField, findsOneWidget);
     expect(passwordField, findsOneWidget);
 
-    await tester.enterText(usernameField, 'test');
+    await tester.enterText(emailField, 'bob@somedomain.com');
     await tester.enterText(passwordField, '123456');
 
     await tester.pump();
 
-    final loginButton = find.widgetWithText(ElevatedButton, 'Log In');
+    final loginButton = find.widgetWithText(ElevatedButton, 'Sign In');
     expect(loginButton, findsOneWidget);
     await tester.tap(loginButton);
 

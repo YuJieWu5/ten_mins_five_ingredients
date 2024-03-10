@@ -1,3 +1,4 @@
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database_mocks/firebase_database_mocks.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +15,7 @@ main() {
   testWidgets("Test recipe list page ui and navigation",
       (WidgetTester tester) async {
     final globalState = GlobalState(
-        false, MockFirebaseStorage(), MockFirebaseDatabase.instance);
+        false, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth());
 
     await mockNetworkImages(
         () async => await tester.pumpWidget(MaterialApp(

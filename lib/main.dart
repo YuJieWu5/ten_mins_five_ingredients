@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,19 +17,20 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp(storage: FirebaseStorage.instance, database: FirebaseDatabase.instance,));
+  runApp(MyApp(storage: FirebaseStorage.instance, database: FirebaseDatabase.instance, auth: FirebaseAuth.instance));
 }
 
 class MyApp extends StatelessWidget {
   final FirebaseStorage storage;
   final FirebaseDatabase database;
-  const MyApp({required this.storage, required this.database, super.key});
+  final FirebaseAuth auth;
+  const MyApp({required this.storage, required this.database, required this.auth, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => GlobalState(false, storage, database)),
+        ChangeNotifierProvider(create: (context) => GlobalState(false, storage, database, auth)),
         ChangeNotifierProvider(create: (context) => IngredientState()),
         ChangeNotifierProvider(create: (context) => RecipeState()),
       ],

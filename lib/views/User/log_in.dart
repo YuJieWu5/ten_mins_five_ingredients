@@ -19,14 +19,15 @@ class _LogInPageState extends State<LogInPage> {
 
   Future<void> _signInWithEmailAndPassword(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
+      final auth = context.read<GlobalState>().auth;
       setState(() => _isLoading = true);
       try {
         final credential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
+            await auth.signInWithEmailAndPassword(
           email: _email,
           password: _password,
         );
-        final userId = FirebaseAuth.instance.currentUser!.uid.toString();
+        final userId = auth.currentUser!.uid.toString();
         context.read<GlobalState>().setUserId(userId);
         context.read<GlobalState>().setLoginStatus(true);
 

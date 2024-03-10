@@ -25,47 +25,15 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  Future<void> _showConsentDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text('Consent'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                    'By signing up, you agree to share your user data with other users.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Disagree'),
-              onPressed: () => Navigator.of(dialogContext).pop(),
-            ),
-            TextButton(
-              child: Text('Agree'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                _createUserWithEmailAndPassword(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _createUserWithEmailAndPassword(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        final auth = context.read<GlobalState>().auth;
+        await auth.createUserWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
-        final userId = FirebaseAuth.instance.currentUser!.uid.toString();
+        final userId = auth.currentUser!.uid.toString();
         final ref = context.read<GlobalState>().database.ref("users/");
         await ref.child(userId).set({
           "name": _usernameController.text,
@@ -146,7 +114,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     padding: EdgeInsets.only(top: 20),
                     child: ElevatedButton(
                       child: Text('Sign Up'),
-                      onPressed: _showConsentDialog,
+                      onPressed: () => _createUserWithEmailAndPassword(context),
                     ),
                   ),
                 ],
