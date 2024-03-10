@@ -1,141 +1,160 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
-
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _userNameController =  TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  DatabaseReference ref = FirebaseDatabase.instance.ref("users/");
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  void _onCreatePressed() async{
-    if(_formKey.currentState?.validate() ?? false) {
-      //TODO: save account info to database
-      // GoRouter.of(context).push('/login');
-      // try{
-      //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      //       email: _userNameController.text,
-      //       password: _passwordController.text
-      //   );
-      // }on FirebaseAuthException catch(ex){
-      //   print(ex.code);
-      //   print(ex.message);
-      // }
-        await ref.push().set({
-          "name": _userNameController.text,
-          "password": int.parse(_passwordController.text),
-        }).catchError((error){
-          print(error);
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showConsentDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Consent'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'By signing up, you agree to share your user data with other users.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Disagree'),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+            TextButton(
+              child: Text('Agree'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                _createUserWithEmailAndPassword(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _createUserWithEmailAndPassword(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        final userId = FirebaseAuth.instance.currentUser!.uid.toString();
+        final ref = context.read<GlobalState>().database.ref("users/");
+        await ref.child(userId).set({
+          "name": _usernameController.text,
+          "email": _emailController.text,
+          "favorite": []
         });
+        context.read<GlobalState>().setUserId(userId);
+        context.read<GlobalState>().setLoginStatus(true);
+        context.go('/');
+      } on FirebaseAuthException catch (e) {
+        _showErrorDialog(
+            e.message ?? 'An error occurred. Please try again later.');
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        // automaticallyImplyLeading: false,
-        leading: GestureDetector(
-            child: Icon(Icons.arrow_back_ios, color: Theme.of(context).colorScheme.onPrimary),
-            onTap: (){
-              GoRouter.of(context).pop();
-            }
-        ),
-        title: Center(
-          child: Text('Sign Up', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
+        title: Text('Sign Up'),
+      ),
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 600), // Limiting the width
+          padding: EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: 'Email Address'),
+                    validator: (value) => value!.isEmpty || !value.contains('@')
+                        ? 'Please enter a valid email address.'
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(labelText: 'Username'),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Please enter a username.' : null,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                    validator: (value) => value!.isEmpty || value.length < 6
+                        ? 'Password must be at least 6 characters long.'
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(labelText: 'Confirm Password'),
+                    obscureText: true,
+                    validator: (value) => value != _passwordController.text
+                        ? 'Passwords do not match.'
+                        : null,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: ElevatedButton(
+                      child: Text('Sign Up'),
+                      onPressed: _showConsentDialog,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: SafeArea(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                  child: Center(
-                    child: SizedBox(
-                      width: 400.0,
-                      child: TextFormField(
-                        key: const Key('Username'),
-                        decoration: const InputDecoration(
-                            labelText: 'Username'
-                        ),
-                        controller: _userNameController,
-                        validator: (newValue) {
-                          if(newValue == null || newValue.isEmpty) {
-                            return 'Username must not be blank.';
-                          }
-                          return null;
-                        },
-                      )
-                    )
-                  )
-                ),
-                SizedBox(
-                  width: 400.0,
-                  child: TextFormField(
-                    key: const Key('Password'),
-                    decoration: const InputDecoration(
-                        labelText: 'Password'
-                    ),
-                    controller: _passwordController,
-                    validator: (newValue) {
-                      if(newValue == null || newValue.isEmpty) {
-                        return 'Password must not be blank.';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 400.0,
-                  child: TextFormField(
-                    key: const Key('ConfirmPassword'),
-                    decoration: const InputDecoration(
-                        labelText: 'Confirm Password'
-                    ),
-                    controller: _confirmPasswordController,
-                    validator: (newValue) {
-                      if(newValue == null || newValue.isEmpty) {
-                        return 'Confirm Password must not be blank.';
-                      }else if(_passwordController.text != _confirmPasswordController.text){
-                        return 'Passwords must be same.';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top:20.0),
-                  child: ElevatedButton(
-                    // Note: we are not calling _onSavePressed! We are passing it
-                    // like an object to this other widget as a constructor arg.
-                      onPressed: _onCreatePressed,
-                      child: const Text('Create')
-                  )
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  onPressed: ()=> GoRouter.of(context).push('/login'),
-                  child: const Text('Log In'),
-                )
-              ],
-            ),
-          )
-        )
-      )
     );
   }
 }

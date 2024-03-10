@@ -181,7 +181,7 @@ class _UploadRecipePageState extends State<UploadRecipePage> {
       for (int i = 0; i < _instructionsCount; i++) {
         instructions.add(_instructionsController[i].text);
       }
-      final ref = context.read<GlobalState>().database.ref();
+      final ref = context.read<GlobalState>().database.ref('recipes/');
 
       await ref.push().set({
         "creator": context.read<GlobalState>().getUserId(),

@@ -1,142 +1,121 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class LogInPage extends StatefulWidget {
-  const LogInPage({super.key});
-
   @override
-  State<LogInPage> createState() => _LogInPageState();
+  _LogInPageState createState() => _LogInPageState();
 }
 
 class _LogInPageState extends State<LogInPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _userNameController =  TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  String? invalidUser;
+  final _formKey = GlobalKey<FormState>();
+  String _email = '';
+  String _password = '';
+  bool _isLoading = false;
+  String _errorMessage = '';
 
-  void _onLoginPressed(BuildContext context) async{
-    if(_formKey.currentState?.validate() ?? false) {
-      //TODO: verify account info
-      final database = context.read<GlobalState>().database;
-      final snapshot = await database.ref().child('users/').get();
-      if (snapshot.exists) {
-        String dataString = jsonEncode(snapshot.value);
-        Map dataMap = jsonDecode(dataString);
-        bool hasUser = _containsUser(dataMap, _userNameController.text, int.parse(_passwordController.text));
-        if(hasUser){
-          GoRouter.of(context).push('/');
-          context.read<GlobalState>().setLoginStatus(true);
-        }else{
-         setState(() {
-           invalidUser = "User name not found or Incorrect password";
-         });
+  Future<void> _signInWithEmailAndPassword(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+      try {
+        final credential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _email,
+          password: _password,
+        );
+        final userId = FirebaseAuth.instance.currentUser!.uid.toString();
+        context.read<GlobalState>().setUserId(userId);
+        context.read<GlobalState>().setLoginStatus(true);
+
+        final database = context.read<GlobalState>().database;
+        final snapshot = await database.ref().child('users/').get();
+        if (snapshot.exists) {
+          String dataString = jsonEncode(snapshot.value);
+          Map dataMap = jsonDecode(dataString);
+
+          for (var user in dataMap.entries) {
+            // Check if any user matches the name and password
+            var id = user.key;
+            var info = user.value;
+            if (id == userId) {
+              context.read<GlobalState>().setSaveList(info['favorite']);
+            }
+          }
         }
-      } else {
-        print('No data available.');
+        context.go('/');
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          _errorMessage = 'No user found for that email.';
+        } else if (e.code == 'invalid-credential') {
+          _errorMessage = 'Wrong password provided for that user.';
+        } else if (e.code == 'invalid-email') {
+          _errorMessage = 'Invalid email address.';
+        }
+        setState(() => _isLoading = false);
       }
+      setState(() => _isLoading = false);
     }
   }
-
-  bool _containsUser(Map data, String name, int password) {
-    // Iterate through all values in the data map
-    for (var user in data.entries) {
-      // Check if any user matches the name and password
-      var id = user.key;
-      var info = user.value;
-      if (info['name'] == name && info['password'] == password) {
-        context.read<GlobalState>().setUserId(id);
-        context.read<GlobalState>().setSaveList(info['favorite']);
-        return true; // Match found
-      }
-    }
-    return false; // No match found
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          leading: GestureDetector(
-              child: Icon(Icons.arrow_back_ios, color: Theme.of(context).colorScheme.onPrimary),
-              onTap: (){
-                GoRouter.of(context).pop();
-              }
-          ),
-          title: Center(
-              child: Text('Log In', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary))
-          ),
-        ),
-        body: SingleChildScrollView(
-            child: Form(
-                key: _formKey,
-                child: SafeArea(
+      appBar: AppBar(
+        title: Text('Sign In'),
+      ),
+      body: Center(
+        child: _isLoading
+            ? CircularProgressIndicator()
+            : Container(
+                constraints:
+                    BoxConstraints(maxWidth: 600), // Max width for the form
+                padding: EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
                   child: Column(
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                          child: Center(
-                              child: SizedBox(
-                                  width: 400.0,
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                        labelText: 'Username'
-                                    ),
-                                    controller: _userNameController,
-                                    validator: (newValue) {
-                                      if(newValue == null || newValue.isEmpty) {
-                                        return 'Username must not be blank.';
-                                      }
-                                      return null;
-                                    },
-                                  )
-                              )
-                          )
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Email'),
+                        validator: (value) =>
+                            value!.isEmpty ? 'Please enter your email' : null,
+                        onSaved: (value) => _email = value!,
+                        onChanged: (value) => _email = value,
                       ),
-                      SizedBox(
-                        width: 400.0,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                              labelText: 'Password'
-                          ),
-                          controller: _passwordController,
-                          validator: (newValue) {
-                            if(newValue == null || newValue.isEmpty) {
-                              return 'Password must not be blank.';
-                            }
-                            return null;
-                          },
+                      TextFormField(
+                        decoration: InputDecoration(labelText: 'Password'),
+                        obscureText: true,
+                        validator: (value) => value!.isEmpty
+                            ? 'Please enter your password'
+                            : null,
+                        onSaved: (value) => _password = value!,
+                        onChanged: (value) => _password = value,
+                      ),
+                      if (_errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(_errorMessage,
+                              style: TextStyle(color: Colors.red)),
                         ),
-                      ),
-                      invalidUser != null
-                          ? Text(invalidUser!, style: const TextStyle(color: Colors.red, fontSize: 12))
-                          : Container(),
-                      Container(
-                          margin: const EdgeInsets.only(top:20.0),
-                          child: ElevatedButton(
-                            // Note: we are not calling _onSavePressed! We are passing it
-                            // like an object to this other widget as a constructor arg.
-                              onPressed: () => _onLoginPressed(context),
-                              child: const Text('Log In')
-                          )
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: ElevatedButton(
+                          onPressed: () => _signInWithEmailAndPassword(context),
+                          child: Text('Sign In'),
+                        ),
                       ),
                       TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                        onPressed: ()=> GoRouter.of(context).push('/signup'),
-                        child: const Text('Create Account'),
-                      )
+                        onPressed: () => context.go('/signup'),
+                        child: Text('Don\'t have an account? Sign up.'),
+                      ),
                     ],
                   ),
-                )
-            )
-        )
+                ),
+              ),
+      ),
     );
   }
 }

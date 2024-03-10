@@ -32,19 +32,19 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'login',
           builder: (BuildContext context, GoRouterState state) {
-            return const LogInPage();
+            return LogInPage();
           },
         ),
         GoRoute(
           path: 'signup',
           builder: (BuildContext context, GoRouterState state) {
-            return const SignUpPage();
+            return SignUpPage();
           },
         ),
         GoRoute(
           path: 'login',
           builder: (BuildContext context, GoRouterState state) {
-            return const LogInPage();
+            return LogInPage();
           },
         ),
         GoRoute(
