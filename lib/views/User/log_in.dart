@@ -16,14 +16,13 @@ class _LogInPageState extends State<LogInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _userNameController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final ref = FirebaseDatabase.instance.ref();
   String? invalidUser;
 
-  void _onLoginPressed() async{
+  void _onLoginPressed(BuildContext context) async{
     if(_formKey.currentState?.validate() ?? false) {
       //TODO: verify account info
-
-      final snapshot = await ref.child('users/').get();
+      final database = context.read<GlobalState>().database;
+      final snapshot = await database.ref().child('users/').get();
       if (snapshot.exists) {
         String dataString = jsonEncode(snapshot.value);
         Map dataMap = jsonDecode(dataString);
@@ -122,7 +121,7 @@ class _LogInPageState extends State<LogInPage> {
                           child: ElevatedButton(
                             // Note: we are not calling _onSavePressed! We are passing it
                             // like an object to this other widget as a constructor arg.
-                              onPressed: _onLoginPressed,
+                              onPressed: () => _onLoginPressed(context),
                               child: const Text('Log In')
                           )
                       ),
