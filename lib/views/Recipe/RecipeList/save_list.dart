@@ -50,6 +50,7 @@ class _SaveListState extends State<SaveList> {
             // Optionally, if you want the file URL after the upload completes
             final String downloadUrl = await storageReference.getDownloadURL();
             recipe.value['image'] = downloadUrl;
+            recipe.value['id'] = recipe.key;
             _recipesList.add(recipe.value);
             // print('Download URL: $downloadUrl');
           } catch (e) {

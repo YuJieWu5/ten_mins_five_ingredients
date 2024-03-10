@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 import 'package:ten_mins_five_ingredients/views/Home/homepage.dart';
+import '../../core/models/global_state.dart';
 import 'recipe_rating_form.dart';
 import 'package:ten_mins_five_ingredients/routes/app_routes.dart';
 
@@ -16,7 +19,51 @@ class RecipeDetail extends StatefulWidget {
 }
 
 class _RecipeDetailState extends State<RecipeDetail> {
+  final ref = FirebaseDatabase.instance.ref();
   String _display = "ingredient";
+  List<dynamic>? currentSaveList;
+  // bool _saved = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentSaveList = context.read<GlobalState>().getSaveList();
+    // final Recipe recipe = widget.recipe;
+    // setState(() {
+    //   _saved = checkExisted(recipe.id);
+    // });
+  }
+
+  void _onSavedPress() async{
+    //Save the recipe id to database or remove it from database
+    final Recipe recipe = widget.recipe;
+    String userID = context.read<GlobalState>().getUserId()!;
+    DatabaseReference ref = FirebaseDatabase.instance.ref('/users/$userID');
+
+    if(!checkExisted(recipe.id)){
+      currentSaveList!.add(recipe.id);
+      context.read<GlobalState>().setSaveList(currentSaveList!);
+
+      await ref.update({
+        "favorite": currentSaveList
+      });
+    }else{
+      currentSaveList!.remove(recipe.id);
+      await ref.update({
+        "favorite": currentSaveList
+      });
+    }
+    setState(() {});
+    // print(recipe.id);
+  }
+
+  bool checkExisted(String id){
+    if(currentSaveList!.contains(id)) {
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +86,11 @@ class _RecipeDetailState extends State<RecipeDetail> {
                 MaterialPageRoute(builder: (context) => const HomePage()),
               );
             }, icon: const Icon(Icons.home)),
-            IconButton(onPressed: (){}, icon: const Icon(Icons.bookmark_border_rounded)),
+            IconButton(
+                onPressed: (){
+                  _onSavedPress();
+                },
+                icon: checkExisted(recipe.id)? const Icon(Icons.bookmark):const Icon(Icons.bookmark_border_rounded)),
             IconButton(
                 onPressed: (){
                   showModalBottomSheet(
