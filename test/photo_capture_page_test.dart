@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/Upload/camera_widget.dart';
 import 'package:ten_mins_five_ingredients/views/Recipe/Upload/photo_capture_page.dart';
@@ -15,7 +14,7 @@ void main() {
 
     // Verify that our counter starts at 0.
     expect(find.byType(CameraWidget), findsOneWidget);
-    expect(find.text('Retake'), findsOneWidget);
+    expect(find.text('Select from gallery'), findsOneWidget);
     expect(find.text('Confirm'), findsOneWidget);
   });
 }

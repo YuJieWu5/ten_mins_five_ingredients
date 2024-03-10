@@ -86,7 +86,7 @@ class ActionBar extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: ElevatedButton(
-              child: const Text('Select form gallery'),
+              child: const Text('Select from gallery'),
               onPressed: () async => await getImage(context),
             ),
           ),
