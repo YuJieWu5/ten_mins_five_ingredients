@@ -3,6 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../core/models/recipe.dart';
 
 
 class CarouselWithIndicator extends StatefulWidget {
@@ -62,6 +65,13 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
     return _recipesList;
   }
 
+  void openRecipeDetail(Map<String, dynamic> recipe, BuildContext context) async {
+    final reLoadPage = await GoRouter.of(context).push('/recipeDetail', extra: Recipe.fromJson(recipe));
+    if (reLoadPage as bool) {
+      setState(() {});
+    }
+  }
+
   List<Widget> buildHearts(double score) {
     List<Widget> hearts = [];
     int fullHearts = score.round();
@@ -94,7 +104,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                     var recipe = _recipesList[itemIndex];
                     return GestureDetector(
                       onTap: () {
-                        // Navigate to the recipe details page
+                        openRecipeDetail(recipe, context);
                       },
                       child: Column(
                         children: [
