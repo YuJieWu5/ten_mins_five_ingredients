@@ -19,7 +19,6 @@ class RecipeDetail extends StatefulWidget {
 }
 
 class _RecipeDetailState extends State<RecipeDetail> {
-  final ref = FirebaseDatabase.instance.ref();
   String _display = "ingredient";
   List<dynamic>? currentSaveList;
   // bool _saved = false;
@@ -35,22 +34,23 @@ class _RecipeDetailState extends State<RecipeDetail> {
     // });
   }
 
-  void _onSavedPress() async{
+  void _onSavedPress(BuildContext context) async{
     //Save the recipe id to database or remove it from database
+    final database = context.read<GlobalState>().database;
     final Recipe recipe = widget.recipe;
     String userID = context.read<GlobalState>().getUserId()!;
-    DatabaseReference ref = FirebaseDatabase.instance.ref('/users/$userID');
+    DatabaseReference userRef = database.ref('/users/$userID');
 
     if(!checkExisted(recipe.id)){
       currentSaveList!.add(recipe.id);
       context.read<GlobalState>().setSaveList(currentSaveList!);
 
-      await ref.update({
+      await userRef.update({
         "favorite": currentSaveList
       });
     }else{
       currentSaveList!.remove(recipe.id);
-      await ref.update({
+      await userRef.update({
         "favorite": currentSaveList
       });
     }
@@ -88,7 +88,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
             }, icon: const Icon(Icons.home)),
             IconButton(
                 onPressed: (){
-                  _onSavedPress();
+                  _onSavedPress(context);
                 },
                 icon: checkExisted(recipe.id)? const Icon(Icons.bookmark):const Icon(Icons.bookmark_border_rounded)),
             IconButton(

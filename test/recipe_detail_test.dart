@@ -1,9 +1,13 @@
+import 'package:firebase_database_mocks/firebase_database_mocks.dart';
+import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail_image_network/mocktail_image_network.dart';
+import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 import 'package:ten_mins_five_ingredients/views/Home/recipe_detail.dart';
-
 
 void main() {
   testWidgets('Recipe_detail test', (WidgetTester tester) async {
@@ -12,7 +16,8 @@ void main() {
     Map<String, dynamic> mock_recipe = {
       "id": "-NrhK-N-i3cg1XRGBZ-K",
       "creator": "qktJ4LO3LRLZdHWg271z",
-      "image": "Simply-Recipes-Bruschetta-Tomato-Basil-LEAD-3-772fd11de4144552a485af87f7033bf8.jpeg",
+      "image":
+          "Simply-Recipes-Bruschetta-Tomato-Basil-LEAD-3-772fd11de4144552a485af87f7033bf8.jpeg",
       "ingredient": [
         "tomato 50g",
         "fresh basil 5g",
@@ -28,17 +33,21 @@ void main() {
       "title": "Tomato Basil Bruschetta"
     };
 
+    final globalState = GlobalState(
+        false, MockFirebaseStorage(), MockFirebaseDatabase.instance);
     final Recipe recipe = Recipe.fromJson(mock_recipe);
-    await tester.pumpWidget(MaterialApp(
-      home: RecipeDetail(recipe: recipe),
-    ));
+    await mockNetworkImages(() async => await tester.pumpWidget(MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => globalState),
+            ],
+            child: MaterialApp(
+              home: RecipeDetail(recipe: recipe),
+            ))));
 
-    // Verify that our counter starts at 0.
     expect(find.byType(RecipeDetail), findsOneWidget);
     expect(find.text('Ingredients'), findsOneWidget);
     expect(find.text('Instruction'), findsOneWidget);
     expect(find.byIcon(Icons.home), findsOneWidget);
     expect(find.byIcon(Icons.bookmark_border_rounded), findsOneWidget);
-
   });
 }
