@@ -10,12 +10,15 @@ import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import 'package:ten_mins_five_ingredients/views/Home/homepage.dart';
 import 'package:ten_mins_five_ingredients/main.dart';
 import 'package:ten_mins_five_ingredients/views/Home/homepage_carousel_with_indicator.dart';
+import 'package:ten_mins_five_ingredients/routes/app_routes.dart';
 
 
 void main() {
   testWidgets('Homepage test', (WidgetTester tester) async {
     tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
     tester.binding.window.devicePixelRatioTestValue = 1.0;
+    
+    
     await tester.pumpWidget(MyApp(storage: MockFirebaseStorage(), database: MockFirebaseDatabase.instance, auth: MockFirebaseAuth(),));
 
     expect(find.byType(HomePage), findsOneWidget);
@@ -98,5 +101,67 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CarouselWithIndicator), findsOneWidget);
 
+  });
+
+  testWidgets('Homepage register mode', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+
+
+    await tester.pumpWidget(
+          MultiProvider(
+              providers:[
+                ChangeNotifierProvider(create: (context)=>GlobalState(false, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth())),
+              ],
+              child: MaterialApp.router(
+                routerConfig: router,
+              ),
+          ),
+        );
+
+    expect(find.byKey(Key("SignInBtn")), findsOneWidget);
+
+  });
+
+  testWidgets('Homepage login mode', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers:[
+          ChangeNotifierProvider(create: (context)=>GlobalState(true, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth())),
+        ],
+        child: MaterialApp.router(
+          routerConfig: router,
+        ),
+      ),
+    );
+
+    expect(find.byKey(Key("AvatarBtn")), findsOneWidget);
+  });
+
+  testWidgets('Homepage login mode, open drawer', (WidgetTester tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(1080, 1920);
+    tester.binding.window.devicePixelRatioTestValue = 1.0;
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers:[
+          ChangeNotifierProvider(create: (context)=>GlobalState(true, MockFirebaseStorage(), MockFirebaseDatabase.instance, MockFirebaseAuth())),
+        ],
+        child: MaterialApp.router(
+          routerConfig: router,
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(Key("AvatarBtn")));
+    await tester.pump();
+
+    // expect(find.byKey(Key("AvatarBtn")), findsOneWidget);
+    expect(find.byType(Drawer), findsOneWidget);
+    expect(find.byType(ListView), findsOneWidget);
+    expect(find.byType(ListTile), findsAny);
   });
 }
