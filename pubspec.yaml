@@ -48,10 +48,6 @@ dependencies:
   firebase_auth: ^4.17.4
   firebase_database: ^10.4.6
   firebase_storage: ^11.6.6
-  firebase_storage_mocks: ^0.6.1
-  firebase_database_mocks: ^0.6.1
-  mocktail_image_network: ^1.1.0
-  firebase_auth_mocks: ^0.13.0
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +59,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  network_image_mock: ^2.0.1
+  firebase_storage_mocks: ^0.6.1
+  firebase_database_mocks: ^0.6.1
+  mocktail_image_network: ^1.1.0
+  firebase_auth_mocks: ^0.13.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -81,7 +81,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'saveList',
           builder: (BuildContext context, GoRouterState state) {
-            return const SaveList();
+            return const SaveList(test: false,);
           },
         ),
         GoRoute(
