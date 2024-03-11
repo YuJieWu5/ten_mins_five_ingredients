@@ -23,7 +23,7 @@ class GetRecipeList extends StatelessWidget {
           children: recipeList.map((item)=>ListTile(
             leading: CircleAvatar(
               child: Image.asset(
-                'assets/images/tomatoes_and_burrata.jpg',
+                'assets/images/gpt_generated.jpg',
                 fit: BoxFit.contain,
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -19,7 +20,7 @@ class RecipeState with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Recipe> parseRecipes(String response) {
+  Future<List<Recipe>> parseRecipes(String response, FirebaseStorage storage) async {
     List<String> recipeSections = response.split('=========\n');
     print(recipeSections);
     List<Recipe> recipes = [];
@@ -52,13 +53,17 @@ class RecipeState with ChangeNotifier {
           }
         }
 
+        Reference storageReference =
+              storage.ref().child('gpt_generated.jpg');
+
+        final String downloadUrl = await storageReference.getDownloadURL();
         Recipe recipe = Recipe(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             title: titleMatch.group(1)!,
             description: descriptionMatch.group(1)!,
             ingredients: ingredients,
             steps: combinedSteps,
-            imageUrl: 'https://placehold.co/600x400/png',
+            imageUrl: downloadUrl,
             rating: 5.0,
             ratingCount: 10);
 
@@ -70,7 +75,7 @@ class RecipeState with ChangeNotifier {
     return recipes;
   }
 
-  Future getRecipesFromOpenAI(List<Ingredient> ingredients) async {
+  Future getRecipesFromOpenAI(List<Ingredient> ingredients, FirebaseStorage storage) async {
     router.push('/loading');
     final ref = FirebaseDatabase.instance.ref();
     final keyObj = await ref.child('openai-key').get();
@@ -121,7 +126,7 @@ class RecipeState with ChangeNotifier {
           Map<String, dynamic> jsonResponse = jsonDecode(response.body);
           String assistantMessage =
               jsonResponse['choices'][0]['message']['content'];
-          recipeList = parseRecipes(assistantMessage);
+          recipeList = await parseRecipes(assistantMessage, storage);
           router.push('/getRecipeList');
         } else {
           print("Failed to load data: ${response.body}");

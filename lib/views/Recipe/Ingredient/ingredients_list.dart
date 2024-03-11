@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import 'package:ten_mins_five_ingredients/core/models/ingredient_state.dart';
 import 'package:ten_mins_five_ingredients/core/models/recipe_state.dart';
 
@@ -49,7 +50,7 @@ class _IngredientListPageState extends State<IngredientListPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    context.read<RecipeState>().getRecipesFromOpenAI(ingredientList);
+                    context.read<RecipeState>().getRecipesFromOpenAI(ingredientList, context.read<GlobalState>().storage);
                   },
                   child: const Text('Show me the recipes!'),
                 ),
