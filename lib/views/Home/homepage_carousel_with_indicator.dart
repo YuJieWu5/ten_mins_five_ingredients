@@ -10,7 +10,8 @@ import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import '../../core/models/recipe.dart';
 
 class CarouselWithIndicator extends StatefulWidget {
-  const CarouselWithIndicator({super.key});
+  final test;
+  const CarouselWithIndicator({required this.test, super.key});
 
   @override
   _CarouselWithIndicatorState createState() => _CarouselWithIndicatorState();
@@ -120,7 +121,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                       },
                       child: Column(
                         children: [
-                          Expanded(
+                          widget.test ? SizedBox() : Expanded(
                             child: Image.network(
                               recipe['image'],
                               fit: BoxFit.cover,

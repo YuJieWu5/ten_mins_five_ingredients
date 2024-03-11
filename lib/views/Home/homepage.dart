@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: CarouselWithIndicator(),
+              child: CarouselWithIndicator(test: false,),
             ),
             SizedBox(
               height: 40,
