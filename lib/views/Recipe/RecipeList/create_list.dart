@@ -9,14 +9,14 @@ import 'package:ten_mins_five_ingredients/core/models/global_state.dart';
 import 'package:ten_mins_five_ingredients/core/models/recipe.dart';
 
 class CreateList extends StatefulWidget {
-  const CreateList({super.key});
+  final test;
+  const CreateList({required this.test, super.key});
 
   @override
   State<CreateList> createState() => _CreateListState();
 }
 
 class _CreateListState extends State<CreateList> {
-  final ref = FirebaseDatabase.instance.ref();
   String? _userId;
   final List _recipesList=[];
 
@@ -33,8 +33,8 @@ class _CreateListState extends State<CreateList> {
       }
   }
 
-  Future<List<dynamic>> readDatabase() async {
-    final snapshot = await ref.child('recipes/').get();
+  Future<List<dynamic>> readDatabase(BuildContext context) async {
+    final snapshot = await context.read<GlobalState>().database.ref().child('recipes/').get();
     if (snapshot.exists) {
       String dataString = jsonEncode(snapshot.value);
       Map dataMap = jsonDecode(dataString);
@@ -44,7 +44,7 @@ class _CreateListState extends State<CreateList> {
           // _recipesList.add(recipe.value);
           try {
             // Upload the file
-            Reference storageReference = FirebaseStorage.instance.ref().child(recipe.value['image']);
+            final storageReference = context.read<GlobalState>().storage.ref().child(recipe.value['image']);
 
             // Optionally, if you want the file URL after the upload completes
             final String downloadUrl = await storageReference.getDownloadURL();
@@ -76,7 +76,7 @@ class _CreateListState extends State<CreateList> {
         ),
       ),
       body: FutureBuilder<List<dynamic>>(
-        future: readDatabase(),
+        future: readDatabase(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -86,7 +86,7 @@ class _CreateListState extends State<CreateList> {
             // List<dynamic> _recipesList = snapshot.data!;
             return ListView(
               children: _recipesList.map((item) => ListTile(
-                leading: CircleAvatar(
+                leading: widget.test ? null : CircleAvatar(
                     backgroundImage: NetworkImage(item['image'])
                 ),
                 title: Text(item['title']),
