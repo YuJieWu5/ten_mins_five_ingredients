@@ -15,10 +15,10 @@ class RecipeRatingForm extends StatefulWidget {
 
 class _RecipeRatingFormState extends State<RecipeRatingForm> {
   int _rating = 0;
-  DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   void _onSubmitPressed() async {
     //TODO: send the rating score to database
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
     if (!context.read<GlobalState>().getLoginStatus()) {
       return;
     }
