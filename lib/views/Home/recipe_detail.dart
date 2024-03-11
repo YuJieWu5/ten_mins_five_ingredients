@@ -87,6 +87,7 @@ class _RecipeDetailState extends State<RecipeDetail> {
               );
             }, icon: const Icon(Icons.home)),
             IconButton(
+                key: const Key("SaveRecipeBtn"),
                 onPressed: (){
                   _onSavedPress(context);
                 },
