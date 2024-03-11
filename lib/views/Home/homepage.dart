@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
   Widget _loginButton() {
     return IconButton(
       icon: const Icon(Icons.login),
+      key: const Key("SignInBtn"),
       onPressed: () {
         GoRouter.of(context).push('/login');
       },
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
   Widget _userAvatarButton() {
     return IconButton(
       icon: const Icon(Icons.account_circle),
+      key: const Key("AvatarBtn"),
       onPressed: () {
         _scaffoldKey.currentState?.openDrawer();
       },
