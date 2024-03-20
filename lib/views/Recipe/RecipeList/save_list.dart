@@ -69,7 +69,7 @@ class _SaveListState extends State<SaveList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recipe List'),
+        title: const Text('Saved List'),
         leading: GestureDetector(
             child: Icon(Icons.arrow_back_ios),
             onTap: (){
