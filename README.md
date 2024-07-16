@@ -12,23 +12,23 @@ The application is developed using Flutter and makes use of the OpenAI API, as w
 ## Screenshots
 
 <div style="display: flex; justify-content: center;">
-    <img src="assets/images/homepageview.png" alt="screenshot1" width="450" />
+    <img src="assets/images/homepageview.png" alt="screenshot1" width="350" />
         <p style="font-style: italic;">The welcome page - You can either log in or use register mode</p>
 </div>
 <div style="display: flex; justify-content: center;">
-    <img src="assets/images/IngredientList.png" alt="screenshot2" width="450" /> 
+    <img src="assets/images/IngredientList.png" alt="screenshot2" width="350" /> 
     <p style="font-style: italic;">Our system will detect ingredients in the image. The user can select up to 5 ingredients at a time.</p>
 </div>
 <div style="display: flex; justify-content: center;">
-    <img src="assets/images/recipeList.png" alt="screenshot3" width="450" />
+    <img src="assets/images/recipeList.png" alt="screenshot3" width="350" />
     <p style="font-style: italic;">The system will return three different recipes for the user.</p>
 </div>
 <div style="display: flex; justify-content: center;">
-    <img src="assets/images/recipeDetail.png" alt="screenshot4" width="450" />
+    <img src="assets/images/recipeDetail.png" alt="screenshot4" width="350" />
     <p style="font-style: italic;">Users can click the list and review the recipe details.</p>
 </div>
 <div style="display: flex; justify-content: center;">
-    <img src="assets/images/upload.png" alt="screenshot5" width="450" />
+    <img src="assets/images/upload.png" alt="screenshot5" width="350" />
     <p style="font-style: italic;">User can also upload their recipe.</p>
 </div>
 
