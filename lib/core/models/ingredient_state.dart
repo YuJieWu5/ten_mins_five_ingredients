@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -39,10 +40,10 @@ class IngredientState with ChangeNotifier {
   }
 
   Future<List<String>> sendImageToOpenAI(String base64Image) async {
-    final ref = FirebaseDatabase.instance.ref();
-    final keyObj = await ref.child('openai-key').get();
-    if (keyObj.exists) {
-      var apiKey = keyObj.value as String;
+    // final keyObj = await ref.child('openai-key').get();
+    final String? apiKey = dotenv.env['OPENAI_API_KEY'];
+    print("API KEY: $apiKey");
+    if (apiKey!=null) {
       final headers = {
         "Content-Type": "application/json",
         "Authorization":
@@ -51,7 +52,7 @@ class IngredientState with ChangeNotifier {
 
       // Payload setup
       final payload = jsonEncode({
-        "model": "gpt-4-vision-preview",
+        "model": "gpt-4o",
         "messages": [
           {
             "role": "user",
