@@ -41,6 +41,7 @@ class IngredientState with ChangeNotifier {
 
   Future<List<String>> sendImageToOpenAI(String base64Image) async {
     // final keyObj = await ref.child('openai-key').get();
+    await dotenv.load(fileName: ".env");
     final String? apiKey = dotenv.env['OPENAI_API_KEY'];
     print("API KEY: $apiKey");
     if (apiKey!=null) {
