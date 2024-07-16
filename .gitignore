@@ -47,3 +47,4 @@ macos/
 linux/
 windows/
 pubspec.lock
+*.env
